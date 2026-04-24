@@ -1,0 +1,179 @@
+/* الألوان والمتغيرات */
+:root {
+    --bg-creamy: #f5f1e9;
+    --accent-orange: #f29c33;
+    --cta-red: rgba(238, 99, 82, 1);
+    --text-black: #1a1a1a;
+    --text-gray: #666;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f5f1e9; 
+}
+.page-wrapper {
+    background-color: var(--bg-creamy);
+    padding: 40px 20px;
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* الهيدر العلوي */
+.main-header {
+    text-align: left;
+    width: 100%;
+    padding: 0  4px;
+}
+
+.main-header h1 {
+    font-size: 50px;
+    font-weight: 700;
+    color: var(--text-black);
+}
+
+.highlight { color: var(--accent-orange); }
+
+.results-count {
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
+    margin-top: -10px;
+    text-transform: uppercase;
+}
+
+/* شبكة البطاقات - Grid */
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.recipe-card {
+    background: #f5f1e9;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.image-container img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 25px;
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--text-black);
+}
+
+.card-content p {
+    font-size: 14px;
+    color: var(--text-gray);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.meta {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.view-recipe {
+    background: transparent;
+    border: 1px solid #ddd;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.view-recipe:hover { background: #f7eede; }
+
+
+/* --- Responsive Adjustments --- */
+
+/* 1. For Tablets and smaller desktops (under 1024px) */
+@media (max-width: 1024px) {
+    .main-header h1 {
+        font-size: 40px; /* Scaling down the large title */
+    }
+    
+    .recipes-grid {
+        gap: 20px; /* Tightening the layout */
+    }
+}
+
+/* 2. For Tablets and large phones (under 768px) */
+@media (max-width: 768px) {
+    .page-wrapper {
+        padding: 30px 15px; /* Reducing outer padding */
+    }
+
+    .main-header h1 {
+        font-size: 32px;
+    }
+
+    .recipes-grid {
+        /* Ensuring at least 280px for smaller screens */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+/* 3. For Mobile Phones (under 480px) */
+@media (max-width: 480px) {
+    .main-header h1 {
+        font-size: 28px;
+        line-height: 1.2;
+    }
+
+    .results-count {
+        margin-top: 5px; /* Fixing the negative margin for small screens */
+    }
+
+    .recipes-grid {
+        grid-template-columns: 1fr; /* Force single column on small phones */
+    }
+
+    .image-container img {
+        height: 180px; /* Slightly shorter images to save vertical space */
+    }
+
+    .card-content {
+        padding: 15px; /* More compact padding */
+    }
+
+    .card-content h3 {
+        font-size: 18px;
+    }
+
+    .card-footer {
+        flex-direction: row; /* Keeps button and meta on the same line */
+        gap: 10px;
+    }
+}
