@@ -1,0 +1,28 @@
+
+export interface Recipe {
+  id: number;
+  name: string;
+  ingredients: string[];
+  instructions: string[];
+  prepTimeMinutes: number;
+  cookTimeMinutes: number;
+  servings: number;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  cuisine: string;
+  caloriesPerServing: number;
+  tags: string[];
+  image: string;
+  rating: number;
+  reviewCount: number;
+  mealType: string[];
+}
+
+export interface RecipeSummary {
+  id: number;
+  name: string;
+  image: string;
+  rating: number;
+  cuisine: string;
+  difficulty: string;
+  mealType: string[];
+}
