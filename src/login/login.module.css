@@ -26,30 +26,7 @@ body {
     padding: 20px;
 }
 
-/* 
-.brand-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding-left: 10px;
-}
 
-.logo-img {
-    width: 40px;
-    height: 40px;
-}
-
-.brand-text {
-font-family: Roboto;
-font-weight: 700;
-font-style: Bold;
-font-size: 15px;
-line-height: 100%;
-letter-spacing: 0%;
-color: #000;
-
-}*/
 
 /* Main card */
 .login-card {

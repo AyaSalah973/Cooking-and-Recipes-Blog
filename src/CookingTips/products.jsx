@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import "./products.css";
+import { useNavigate } from "react-router-dom";
+import styles from "./products.module.css";
 
 function Products() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("https://dummyjson.com/recipes?limit=0")
@@ -14,47 +16,48 @@ function Products() {
       });
   }, []);
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <div className={styles.loading}>Loading...</div>;
 
   const newest = recipes.slice(0, 2);
   const basics = recipes.slice(2, 8);
   const nourishing = recipes.slice(8, 11);
   const tips = recipes.slice(11, 17);
 
+  const handleRecipeClick = (recipeId) => navigate(`/recipe/${recipeId}`);
+
   return (
-    <div className="page">
+    <div className={styles.page}>
 
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-left">
+      <section className={styles.hero}>
+        <div className={styles['hero-left']}>
           <h1>OUR ESSENTIAL COOKING TIPS</h1>
         </div>
-        <div className="hero-right">
+        <div className={styles['hero-right']}>
           <p>Welcome to Cooks Delight's treasure trove of cooking wisdom! Whether you're a seasoned chef or just starting your culinary journey, our cooking tips are designed to elevate your skills, enhance your kitchen experience, and bring joy to your cooking adventures.</p>
         </div>
       </section>
 
-
       {/* BADGES */}
-      <div className="badges-row">
-        <div className="badge-item">
-          <span className="badge-icon">🔪</span>
+      <div className={styles['badges-row']}>
+        <div className={styles['badge-item']}>
+          <span className={styles['badge-icon']}>🔪</span>
           <div>
             <strong>QUALITY TOOLS</strong>
             <p>Invest in high-quality knives, cutting boards, and cookware.</p>
           </div>
         </div>
-        <div className="badge-divider" />
-        <div className="badge-item">
-          <span className="badge-icon">🥄</span>
+        <div className={styles['badge-divider']} />
+        <div className={styles['badge-item']}>
+          <span className={styles['badge-icon']}>🥄</span>
           <div>
             <strong>ESSENTIAL UTENSILS</strong>
             <p>Have a variety of utensils, including spatulas, tongs, and ladles.</p>
           </div>
         </div>
-        <div className="badge-divider" />
-        <div className="badge-item">
-          <span className="badge-icon">⚖️</span>
+        <div className={styles['badge-divider']} />
+        <div className={styles['badge-item']}>
+          <span className={styles['badge-icon']}>⚖️</span>
           <div>
             <strong>MEASURING ACCURACY</strong>
             <p>Use measuring cups and spoons for precise ingredient quantities.</p>
@@ -62,83 +65,92 @@ function Products() {
         </div>
       </div>
 
-
       {/* NEWEST RECIPES */}
-      <div className="newest-section">
-        <div className="section-header">
+      <div className={styles['newest-section']}>
+        <div className={styles['section-header']}>
           <h2>NEWEST RECIPES</h2>
-          <div className="nav-arrows">
-            <button className="arrow">‹</button>
-            <button className="arrow">›</button>
+          <div className={styles['nav-arrows']}>
+            <button className={styles.arrow}>‹</button>
+            <button className={styles.arrow}>›</button>
           </div>
         </div>
-        <div className="newest-grid">
+        <div className={styles['newest-grid']}>
           {newest.map((r) => (
-            <div className="newest-card" key={r.id}>
-              <div className="newest-img-wrap">
+            <div className={styles['newest-card']} key={r.id}
+              onClick={() => handleRecipeClick(r.id)} style={{ cursor: 'pointer' }}>
+              <div className={styles['newest-img-wrap']}>
                 <img src={r.image} alt={r.name} />
-                <span className="vegan-badge">VEGAN<br />RECIPE</span>
+                <span className={styles['vegan-badge']}>VEGAN<br />RECIPE</span>
               </div>
-              <div className="newest-info">
+              <div className={styles['newest-info']}>
                 <h3>{r.name}</h3>
-                <p className="newest-desc">{r.instructions?.[0] || "A delicious recipe you will love."}</p>
-                <div className="card-footer">
-                  <span className="meta">{r.cookTimeMinutes} MIN · {r.difficulty?.toUpperCase()} PREP · {r.servings} SERVES</span>
-                  <button className="view-btn">VIEW RECIPE</button>
+                <p className={styles['newest-desc']}>{r.instructions?.[0] || "A delicious recipe you will love."}</p>
+                <div className={styles['card-footer']}>
+                  <span className={styles.meta}>{r.cookTimeMinutes} MIN · {r.difficulty?.toUpperCase()} PREP · {r.servings} SERVES</span>
+                  <button className={styles['view-btn']} onClick={(e) => {
+                    e.stopPropagation();
+                    handleRecipeClick(r.id);
+                  }}>VIEW RECIPE</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
 
       {/* MASTERING THE BASICS */}
-      <div className="basics-section">
-        <div className="section-header">
+      <div className={styles['basics-section']}>
+        <div className={styles['section-header']}>
           <h2>MASTERING THE BASICS</h2>
-          <div className="nav-arrows">
-            <button className="arrow">‹</button>
-            <button className="arrow">›</button>
+          <div className={styles['nav-arrows']}>
+            <button className={styles.arrow}>‹</button>
+            <button className={styles.arrow}>›</button>
           </div>
         </div>
-        <div className="basics-grid">
+        <div className={styles['basics-grid']}>
           {basics.map((r) => (
-            <div className="basic-card" key={r.id}>
+            <div className={styles['basic-card']} key={r.id}
+              onClick={() => handleRecipeClick(r.id)} style={{ cursor: 'pointer' }}>
               <img src={r.image} alt={r.name} />
-              <div className="basic-info">
+              <div className={styles['basic-info']}>
                 <h3>{r.name}</h3>
                 <p>{r.instructions?.[0] || "A delicious recipe you will love."}</p>
-                <div className="card-footer">
-                  <span className="meta">{r.cookTimeMinutes} MIN · 01 JUN 23</span>
-                  <button className="read-btn">READ MORE</button>
+                <div className={styles['card-footer']}>
+                  <span className={styles.meta}>{r.cookTimeMinutes} MIN · 01 JUN 23</span>
+                  <button className={styles['read-btn']} onClick={(e) => {
+                    e.stopPropagation();
+                    handleRecipeClick(r.id);
+                  }}>READ MORE</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
 
       {/* NOURISHING EVERY PALATE */}
-      <div className="nourish-section">
-        <div className="section-header">
+      <div className={styles['nourish-section']}>
+        <div className={styles['section-header']}>
           <h2>NOURISHING EVERY PALATE</h2>
-          <div className="nav-arrows">
-            <button className="arrow">‹</button>
-            <button className="arrow">›</button>
+          <div className={styles['nav-arrows']}>
+            <button className={styles.arrow}>‹</button>
+            <button className={styles.arrow}>›</button>
           </div>
         </div>
-        <div className="nourish-grid">
+        <div className={styles['nourish-grid']}>
           {nourishing.map((r) => (
-            <div className="nourish-card" key={r.id}>
+            <div className={styles['nourish-card']} key={r.id}
+              onClick={() => handleRecipeClick(r.id)} style={{ cursor: 'pointer' }}>
               <img src={r.image} alt={r.name} />
-              <div className="nourish-overlay">
+              <div className={styles['nourish-overlay']}>
                 <h3>{r.name}</h3>
                 <p>{r.instructions?.[0] || "A delicious recipe you will love."}</p>
-                <div className="card-footer">
-                  <span className="meta light">{r.cookTimeMinutes} MIN · 01 JUN 23</span>
-                  <button className="read-btn white-btn">READ MORE</button>
+                <div className={styles['card-footer']}>
+                  <span className={`${styles.meta} ${styles.light}`}>{r.cookTimeMinutes} MIN · 01 JUN 23</span>
+                  <button className={`${styles['read-btn']} ${styles['white-btn']}`} onClick={(e) => {
+                    e.stopPropagation();
+                    handleRecipeClick(r.id);
+                  }}>READ MORE</button>
                 </div>
               </div>
             </div>
@@ -146,26 +158,29 @@ function Products() {
         </div>
       </div>
 
-
       {/* TIPS & TRICKS */}
-      <div className="tips-section">
-        <div className="section-header">
+      <div className={styles['tips-section']}>
+        <div className={styles['section-header']}>
           <h2>TIPS & TRICKS</h2>
-          <div className="nav-arrows">
-            <button className="arrow">‹</button>
-            <button className="arrow">›</button>
+          <div className={styles['nav-arrows']}>
+            <button className={styles.arrow}>‹</button>
+            <button className={styles.arrow}>›</button>
           </div>
         </div>
-        <div className="tips-grid">
+        <div className={styles['tips-grid']}>
           {tips.map((r) => (
-            <div className="tip-card" key={r.id}>
+            <div className={styles['tip-card']} key={r.id}
+              onClick={() => handleRecipeClick(r.id)} style={{ cursor: 'pointer' }}>
               <img src={r.image} alt={r.name} />
-              <div className="tip-info">
+              <div className={styles['tip-info']}>
                 <h3>{r.name}</h3>
                 <p>{r.instructions?.[0] || "A delicious recipe you will love."}</p>
-                <div className="card-footer">
-                  <span className="meta">{r.cookTimeMinutes} MIN · 01 JUN 23</span>
-                  <button className="read-btn">READ MORE</button>
+                <div className={styles['card-footer']}>
+                  <span className={styles.meta}>{r.cookTimeMinutes} MIN · 01 JUN 23</span>
+                  <button className={styles['read-btn']} onClick={(e) => {
+                    e.stopPropagation();
+                    handleRecipeClick(r.id);
+                  }}>READ MORE</button>
                 </div>
               </div>
             </div>

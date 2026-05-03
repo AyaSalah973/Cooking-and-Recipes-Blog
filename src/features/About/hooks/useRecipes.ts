@@ -36,3 +36,4 @@ export const useRecipes = (limit: number = 6): UseRecipesReturn => {
 
   return { recipes, loading, error };
 };
+
