@@ -1,10 +1,11 @@
 // src/shared/layout/Navbar.tsx
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Navbar.css"; // تأكد من وجود ملف CSS أو قم بتعديل المسار
+import "./Navbar.css";
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const links = [
@@ -14,9 +15,46 @@ export default function Navbar() {
     { name: "ABOUT US", path: "/about" },
   ];
 
+  // Get the first recipe ID from the API and navigate to it
+  const handleRecipesClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("https://dummyjson.com/recipes");
+      const data = await response.json();
+      if (data.recipes && data.recipes.length > 0) {
+        const firstRecipeId = data.recipes[0].id;
+        navigate(`/recipe/${firstRecipeId}`);
+      }
+    } catch (error) {
+      console.error("Error fetching first recipe:", error);
+      navigate("/recipes");
+    }
+    setMenuOpen(false);
+  };
+
+  const handleSignUpClick = () => {
+    navigate('/login');
+    setMenuOpen(false);
+  };
+
+  const isActiveLink = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    if (path === "/recipes" && location.pathname.startsWith("/recipe")) {
+      return true; 
+    }
+    if (path === "/tips") {
+      return location.pathname === "/tips";
+    }
+    if (path === "/about") {
+      return location.pathname === "/about";
+    }
+    return false;
+  };
+
   return (
     <>
-      {/* ====== DESKTOP + MOBILE NAVBAR ====== */}
       <div className="navbar-wrapper">
         <div className="navbar">
           {/* LEFT: Logo */}
@@ -31,20 +69,33 @@ export default function Navbar() {
 
           {/* CENTER: Desktop Links */}
           <div className="navbar-links">
-            {links.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={location.pathname === link.path ? "nav-link active" : "nav-link"}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {links.map((link) => {
+              if (link.name === "RECIPES") {
+                return (
+                  <a
+                    key={link.path}
+                    href="#"
+                    onClick={handleRecipesClick}
+                    className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* RIGHT: Search + Hamburger */}
+          {/* RIGHT: Search + Sign Up Button (Desktop) */}
           <div className="navbar-right">
-            {/* Search Icon */}
             <div className="search-box">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <circle cx="7.5" cy="7.5" r="5.5" stroke="#262522" strokeWidth="2"/>
@@ -52,7 +103,8 @@ export default function Navbar() {
               </svg>
             </div>
 
-            {/* Hamburger (Mobile only) */}
+     
+
             <div className="menu-icon" onClick={() => setMenuOpen(true)}>
               <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
                 <rect width="22" height="2.5" rx="1.25" fill="#262522"/>
@@ -64,11 +116,10 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ====== MOBILE DRAWER ====== */}
+      {/* MOBILE DRAWER */}
       {menuOpen && (
         <div className="drawer-overlay" onClick={() => setMenuOpen(false)}>
           <div className="drawer" onClick={(e) => e.stopPropagation()}>
-            {/* Header */}
             <div className="drawer-header">
               <div className="drawer-logo-row">
                 <div className="logo-icon logo-icon-sm">
@@ -86,21 +137,33 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Links */}
             <div className="drawer-links">
-              {links.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMenuOpen(false)}
-                  className={location.pathname === link.path ? "drawer-link active" : "drawer-link"}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {links.map((link) => {
+                if (link.name === "RECIPES") {
+                  return (
+                    <a
+                      key={link.path}
+                      href="#"
+                      onClick={handleRecipesClick}
+                      className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}
+                    >
+                      {link.name}
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMenuOpen(false)}
+                    className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
             </div>
 
-            {/* Footer: Search + Signup */}
             <div className="drawer-footer">
               <div className="drawer-search-circle">
                 <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
@@ -108,10 +171,11 @@ export default function Navbar() {
                   <path d="M12 12L16 16" stroke="#F0EBE1" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
-              <button className="drawer-signup-btn">SIGN UP NOW!</button>
+              <button className="drawer-signup-btn" onClick={handleSignUpClick}>
+                SIGN UP NOW!
+              </button>
             </div>
 
-            {/* Social Icons */}
             <div className="drawer-socials">
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

@@ -1,6 +1,14 @@
+// src/components/Banner.jsx
 import "./Banner.css";
+import { useNavigate } from 'react-router-dom'; 
 
 function Banner() {
+  const navigate = useNavigate();  
+
+  const handleSignUpClick = () => {
+    navigate('/login');
+  };
+
   return (
     <section className="join-section">
       <div className="overlay top-circle"></div>
@@ -18,7 +26,9 @@ function Banner() {
         dishes, and enjoy a personalized cooking experience.
       </p>
 
-      <button className="banner-btn">SIGN UP</button>
+      <button className="banner-btn" onClick={handleSignUpClick}>  {/* 👈 أضف onClick */}
+        SIGN UP
+      </button>
     </section>
   );
 }

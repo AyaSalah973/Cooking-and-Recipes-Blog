@@ -1,51 +1,53 @@
-
-import './login.css';
-//import logoIcon from '../../assets/Logo.svg';//
+import { useNavigate } from 'react-router-dom';
+import styles from './login.module.css';
+import cookingImage from '../assets/pexels-zain-abba-116752359-17450215 1.png';
 
 const Login = () => {
+    const navigate = useNavigate();
+
+    const handleSignUp = (e) => {
+        e.preventDefault();
+        console.log('تم النقر على زر التسجيل');
+    };
+
     return (
-    <div className="page-wrapper">
-    {/* <header className="brand-header">
-        <img src={logoIcon} alt="Logo" className="logo-img" />
-        <div className="brand-text">
-            <strong>Cooks</strong><br/>
-            <strong>Delight</strong>
-        </div>
-        </header>*/}
-        <div className="login-card">
-        <div className="image-section">
-            <div className="image-overlay"></div>
-            <img src="src/assets/pexels-zain-abba-116752359-17450215 1.png" alt="Cooking" />
-        </div>
-        <div className="form-section">
-            <div className="form-content">
-            <h1>LOG IN</h1>
-            <p className="welcome-text">
-                Welcome back to your kitchen. Log in to access your saved recipes, favorite dishes, and personal cooking space.
-            </p>
-
-            <form>
-                <div className="input-group">
-                <label>USERNAME</label>
-                <input type="text" placeholder="Enter your username" />
+        <div className={styles['page-wrapper']}>
+            <div className={styles['login-card']}>
+                <div className={styles['image-section']}>
+                    <div className={styles['image-overlay']}></div>
+                    <img src={cookingImage} alt="Cooking" />
                 </div>
+                <div className={styles['form-section']}>
+                    <div className={styles['form-content']}>
+                        <h1 className={styles.h1}>LOG IN</h1>
+                        <p className={styles['welcome-text']}>
+                            Welcome back to your kitchen. Log in to access your saved recipes, favorite dishes, and personal cooking space.
+                        </p>
 
-                <div className="input-group">
-                <label>PASSWORD</label>
-                <input type="password" placeholder="Enter your password" />
+                        <form onSubmit={handleSignUp}>
+                            <div className={styles['input-group']}>
+                                <label>USERNAME</label>
+                                <input type="text" placeholder="Enter your username" />
+                            </div>
+
+                            <div className={styles['input-group']}>
+                                <label>PASSWORD</label>
+                                <input type="password" placeholder="Enter your password" />
+                            </div>
+
+                            <button type="submit" className={styles['signup-btn']}>
+                                SIGN UP NOW!
+                            </button>
+                        </form>
+
+                        <div className={styles.divider}></div>
+                        <p className={styles['footer-text']}>
+                            DON'T HAVE AN ACCOUNT? <a href="/login">CREATE ONE NOW</a>
+                        </p>
+                    </div>
                 </div>
-
-                <button type="submit" className="signup-btn">SIGN UP NOW!</button>
-            </form>
-
-            <div className="divider"></div>
-            <p className="footer-text">
-                DON'T HAVE AN ACCOUNT? <a href="#">CREATE ONE NOW</a>
-            </p>
             </div>
         </div>
-        </div>
-    </div>
     );
 };
 

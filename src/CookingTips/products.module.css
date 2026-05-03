@@ -1,3 +1,4 @@
+/* products page */
 * * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -15,15 +16,13 @@ body {
 
 .page {
   max-width: 95%;
-  height: 4,782px;
-  margin: 0 auto;
+  margin: 40px auto 0;  /* ← غيري 0 auto لـ 40px auto 0 */
   padding: 80px 20px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   background-color: #F0EBE1;
 }
-
 /* ── HERO ── */
 .hero {
   display: grid;
@@ -741,3 +740,4 @@ letter-spacing: 1%;
     font-size: 1rem;
   }
 }
+
