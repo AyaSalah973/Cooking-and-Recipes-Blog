@@ -76,6 +76,61 @@ html, body {
     flex-grow: 1;
 }
 
+
+/* للتعامل مع حالة عدم وجود نتائج */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #FFF9F0;
+    border-radius: 16px;
+    border: 1px dashed #F29C33;
+}
+
+.no-results p {
+    font-size: 1.2rem;
+    color: #4A4A4A;
+    margin-bottom: 20px;
+}
+
+.clear-search {
+    background-color: #F29C33;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.clear-search:hover {
+    background-color: #E08A1F;
+}
+
+/* تحسينات لزر VIEW RECIPE */
+.view-recipe {
+    background-color: transparent;
+    border: 1px solid #F29C33;
+    color: #F29C33;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.view-recipe:hover {
+    background-color: #F29C33;
+    color: white;
+}
+
+/* تحسينات للـ search box */
+.search-input:focus {
+    outline: none;
+    border-color: #F29C33;
+}
+
 .card-content h3 {
     font-size: 20px;
     margin-bottom: 12px;

@@ -1,12 +1,45 @@
-// src/shared/layout/Navbar.tsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Navbar.css";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [allRecipes, setAllRecipes] = useState([]);
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  // جيبي كل الوصفات مرة واحدة
+  useEffect(() => {
+    fetch("https://dummyjson.com/recipes?limit=50")
+      .then(res => res.json())
+      .then(data => setAllRecipes(data.recipes));
+  }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    if (value.trim()) {
+      navigate(`/recipes?search=${encodeURIComponent(value)}`);
+    } else {
+      navigate("/recipes");
+    }
+  };
+
+  const handleRecipeClick = (id: number) => {
+    navigate(`/recipe/${id}`);
+    setShowOverlay(false);
+    setSearchInput("");
+    setSearchResults([]);
+  };
+
+  const closeOverlay = () => {
+    setShowOverlay(false);
+    setSearchInput("");
+    setSearchResults([]);
+  };
 
   const links = [
     { name: "HOME", path: "/" },
@@ -15,41 +48,25 @@ export default function Navbar() {
     { name: "ABOUT US", path: "/about" },
   ];
 
-  // Get the first recipe ID from the API and navigate to it
   const handleRecipesClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
       const response = await fetch("https://dummyjson.com/recipes");
       const data = await response.json();
       if (data.recipes && data.recipes.length > 0) {
-        const firstRecipeId = data.recipes[0].id;
-        navigate(`/recipe/${firstRecipeId}`);
+        navigate(`/recipe/${data.recipes[0].id}`);
       }
-    } catch (error) {
-      console.error("Error fetching first recipe:", error);
+    } catch {
       navigate("/recipes");
     }
     setMenuOpen(false);
   };
 
-  const handleSignUpClick = () => {
-    navigate('/login');
-    setMenuOpen(false);
-  };
-
   const isActiveLink = (path: string) => {
-    if (path === "/") {
-      return location.pathname === "/";
-    }
-    if (path === "/recipes" && location.pathname.startsWith("/recipe")) {
-      return true; 
-    }
-    if (path === "/tips") {
-      return location.pathname === "/tips";
-    }
-    if (path === "/about") {
-      return location.pathname === "/about";
-    }
+    if (path === "/") return location.pathname === "/";
+    if (path === "/recipes" && location.pathname.startsWith("/recipe")) return true;
+    if (path === "/tips") return location.pathname === "/tips";
+    if (path === "/about") return location.pathname === "/about";
     return false;
   };
 
@@ -67,44 +84,43 @@ export default function Navbar() {
             <span className="logo-text">Cooks<br/>Delight</span>
           </div>
 
-          {/* CENTER: Desktop Links */}
+          {/* CENTER: Links */}
           <div className="navbar-links">
             {links.map((link) => {
               if (link.name === "RECIPES") {
                 return (
-                  <a
-                    key={link.path}
-                    href="#"
-                    onClick={handleRecipesClick}
-                    className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}
-                  >
+                  <a key={link.path} href="#" onClick={handleRecipesClick}
+                    className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}>
                     {link.name}
                   </a>
                 );
               }
               return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}
-                >
+                <Link key={link.path} to={link.path}
+                  className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}>
                   {link.name}
                 </Link>
               );
             })}
           </div>
 
-          {/* RIGHT: Search + Sign Up Button (Desktop) */}
+          {/* RIGHT: Search */}
           <div className="navbar-right">
             <div className="search-box">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <circle cx="7.5" cy="7.5" r="5.5" stroke="#262522" strokeWidth="2"/>
-                <path d="M12 12L16 16" stroke="#262522" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              <button className="search-icon-btn">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="7.5" cy="7.5" r="5.5" stroke="#262522" strokeWidth="2"/>
+                  <path d="M12 12L16 16" stroke="#262522" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+              <input
+                type="text"
+                placeholder="Search recipes..."
+                value={searchInput}
+                onChange={handleSearchChange}
+                className="search-input"
+              />
             </div>
-
-     
-
             <div className="menu-icon" onClick={() => setMenuOpen(true)}>
               <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
                 <rect width="22" height="2.5" rx="1.25" fill="#262522"/>
@@ -115,6 +131,49 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* SEARCH OVERLAY */}
+      {showOverlay && (
+        <div className="search-overlay" onClick={closeOverlay}>
+          <div className="search-overlay-content" onClick={e => e.stopPropagation()}>
+            
+            {/* Header */}
+            <div className="search-overlay-header">
+              <h2 className="search-overlay-title">
+                DISPLAYING RESULTS FOR:{' '}
+                <span style={{ color: '#F29C33' }}>{searchInput.toUpperCase()}</span>
+              </h2>
+              <p className="search-overlay-count">
+                {searchResults.length} RECIPES FOUND
+              </p>
+              <button className="search-overlay-close" onClick={closeOverlay}>✕</button>
+            </div>
+
+            {/* Results Grid */}
+            {searchResults.length === 0 ? (
+              <p style={{ color: '#666', fontFamily: "'Roboto', sans-serif" }}>
+                No recipes found for "{searchInput}"
+              </p>
+            ) : (
+              <div className="search-results-grid">
+                {searchResults.map((recipe: any) => (
+                  <div key={recipe.id} className="search-result-card"
+                    onClick={() => handleRecipeClick(recipe.id)}>
+                    <img src={recipe.image} alt={recipe.name} className="search-result-img" />
+                    <div className="search-result-info">
+                      <h3 className="search-result-name">{recipe.name}</h3>
+                      <p className="search-result-meta">
+                        {recipe.prepTimeMinutes} MIN · {recipe.difficulty?.toUpperCase()} · {recipe.servings} SERVES
+                      </p>
+                      <button className="search-result-btn">VIEW RECIPE</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* MOBILE DRAWER */}
       {menuOpen && (
@@ -136,46 +195,29 @@ export default function Navbar() {
                 </svg>
               </button>
             </div>
-
             <div className="drawer-links">
               {links.map((link) => {
                 if (link.name === "RECIPES") {
                   return (
-                    <a
-                      key={link.path}
-                      href="#"
-                      onClick={handleRecipesClick}
-                      className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}
-                    >
+                    <a key={link.path} href="#" onClick={handleRecipesClick}
+                      className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}>
                       {link.name}
                     </a>
                   );
                 }
                 return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setMenuOpen(false)}
-                    className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}
-                  >
+                  <Link key={link.path} to={link.path} onClick={() => setMenuOpen(false)}
+                    className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}>
                     {link.name}
                   </Link>
                 );
               })}
             </div>
-
             <div className="drawer-footer">
-              <div className="drawer-search-circle">
-                <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
-                  <circle cx="7.5" cy="7.5" r="5.5" stroke="#F0EBE1" strokeWidth="2"/>
-                  <path d="M12 12L16 16" stroke="#F0EBE1" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <button className="drawer-signup-btn" onClick={handleSignUpClick}>
+              <button className="drawer-signup-btn" onClick={() => { navigate('/login'); setMenuOpen(false); }}>
                 SIGN UP NOW!
               </button>
             </div>
-
             <div className="drawer-socials">
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
