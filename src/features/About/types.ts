@@ -10,3 +10,5 @@ export interface AboutSectionData {
   chefName: string;
   chefImage?: string;
 }
+
+

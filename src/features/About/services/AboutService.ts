@@ -13,3 +13,4 @@ Whether you're a seasoned home cook or just starting your culinary adventure, I'
     };
   },
 };
+
