@@ -1,15 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
  
 interface HeroSectionProps {
   title: string;
 }
  
 export const HeroSection: React.FC<HeroSectionProps> = ({ title }) => {
+   const navigate = useNavigate();
   return (
     <div style={{ padding: '48px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '64px' }}>
 
-        <h1 style={{
+        <h2 style={{
           flex: 1,
           fontFamily: "'Montserrat', sans-serif",
           fontWeight: 800,
@@ -19,9 +21,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ title }) => {
           textTransform: 'uppercase',
           color: '#262522',
           margin: 0,
+          
         }}>
           {title}
-        </h1>
+        </h2>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <p style={{
@@ -51,7 +54,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ title }) => {
             letterSpacing: '1px',
             textTransform: 'uppercase',
             color: '#080808',
-          }}>
+          }} onClick={() => navigate('/recipes')}>
             Explore Recipes
           </button>
         </div>

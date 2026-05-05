@@ -63,7 +63,7 @@ export default function Home() {
           <p>Explore a world of flavors, discover handcrafted recipes, and let the aroma of our passion for cooking fill your kitchen</p>
           <div className={styles['hero-buttons']}>
             <button className={styles['btn-primary']} onClick={() => navigate('/login')}>SIGN UP NOW!</button>
-            <button className={styles['btn-secondary']}>EXPLORE RECIPES</button>
+            <button className={styles['btn-secondary']} onClick={() => navigate('/recipes')}>EXPLORE RECIPES</button>
           </div>
         </div>
       </div>

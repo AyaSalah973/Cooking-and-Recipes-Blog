@@ -36,7 +36,7 @@ body {
 }
 
 .hero-left h1 {
-  font-size: 80px;
+  font-size: 75px;
   font-weight: 800;
   line-height: 100%;
   color: #1a1a1a;
@@ -44,6 +44,7 @@ body {
   font-style: bold;
   letter-spacing: -1%;
   font-style: Uppercase;
+  text-align: left;
 }
 
 .hero-right p {
@@ -342,6 +343,7 @@ opacity: 1;
   font-weight: 800;
   color: #1a1a1a;
   margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .basic-info p {

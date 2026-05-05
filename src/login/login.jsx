@@ -35,7 +35,7 @@ const Login = () => {
                                 <input type="password" placeholder="Enter your password" />
                             </div>
 
-                            <button type="submit" className={styles['signup-btn']}>
+                            <button type="submit" className={styles['signup-btn']} onClick={() => navigate('/tips')}>
                                 SIGN UP NOW!
                             </button>
                         </form>
