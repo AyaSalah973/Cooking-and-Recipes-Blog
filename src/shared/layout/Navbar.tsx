@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
 import "./Navbar.css";
+
 
 export default function Navbar() {
   const location = useLocation();
@@ -10,12 +12,13 @@ export default function Navbar() {
   const [searchResults, setSearchResults] = useState([]);
   const [allRecipes, setAllRecipes] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   // جيبي كل الوصفات مرة واحدة
   useEffect(() => {
     fetch("https://dummyjson.com/recipes?limit=50")
-      .then(res => res.json())
-      .then(data => setAllRecipes(data.recipes));
+      .then((res) => res.json())
+      .then((data) => setAllRecipes(data.recipes));
   }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +44,15 @@ export default function Navbar() {
     setSearchResults([]);
   };
 
+const toggleDarkMode = () => {
+  if (document.body.classList.contains("dark")) {
+    document.body.classList.remove("dark");
+    setDarkMode(false);
+  } else {
+    document.body.classList.add("dark");
+    setDarkMode(true);
+  }
+};
   const links = [
     { name: "HOME", path: "/" },
     { name: "RECIPES", path: "/recipes" },
@@ -64,7 +76,8 @@ export default function Navbar() {
 
   const isActiveLink = (path: string) => {
     if (path === "/") return location.pathname === "/";
-    if (path === "/recipes" && location.pathname.startsWith("/recipe")) return true;
+    if (path === "/recipes" && location.pathname.startsWith("/recipe"))
+      return true;
     if (path === "/tips") return location.pathname === "/tips";
     if (path === "/about") return location.pathname === "/about";
     return false;
@@ -81,7 +94,11 @@ export default function Navbar() {
               <div className="logo-circle-mid"></div>
               <div className="logo-circle-inner"></div>
             </div>
-            <span className="logo-text">Cooks<br/>Delight</span>
+            <span className="logo-text">
+              Cooks
+              <br />
+              Delight
+            </span>
           </div>
 
           {/* CENTER: Links */}
@@ -89,15 +106,26 @@ export default function Navbar() {
             {links.map((link) => {
               if (link.name === "RECIPES") {
                 return (
-                  <a key={link.path} href="#" onClick={handleRecipesClick}
-                    className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}>
+                  <a
+                    key={link.path}
+                    href="#"
+                    onClick={handleRecipesClick}
+                    className={
+                      isActiveLink(link.path) ? "nav-link active" : "nav-link"
+                    }
+                  >
                     {link.name}
                   </a>
                 );
               }
               return (
-                <Link key={link.path} to={link.path}
-                  className={isActiveLink(link.path) ? "nav-link active" : "nav-link"}>
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={
+                    isActiveLink(link.path) ? "nav-link active" : "nav-link"
+                  }
+                >
                   {link.name}
                 </Link>
               );
@@ -106,11 +134,29 @@ export default function Navbar() {
 
           {/* RIGHT: Search */}
           <div className="navbar-right">
+            <button type="button" className="dark-btn" onClick={toggleDarkMode}>
+              {darkMode ? <FiSun /> : <FiMoon />}
+            </button>
             <div className="search-box">
-              <button className="search-icon-btn">
+              <button
+                className="search-icon-btn"
+                title="Search"
+                aria-label="Search"
+              >
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <circle cx="7.5" cy="7.5" r="5.5" stroke="#262522" strokeWidth="2"/>
-                  <path d="M12 12L16 16" stroke="#262522" strokeWidth="2" strokeLinecap="round"/>
+                  <circle
+                    cx="7.5"
+                    cy="7.5"
+                    r="5.5"
+                    stroke="#262522"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M12 12L16 16"
+                    stroke="#262522"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </button>
               <input
@@ -123,9 +169,15 @@ export default function Navbar() {
             </div>
             <div className="menu-icon" onClick={() => setMenuOpen(true)}>
               <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                <rect width="22" height="2.5" rx="1.25" fill="#262522"/>
-                <rect y="6.5" width="22" height="2.5" rx="1.25" fill="#262522"/>
-                <rect y="13" width="22" height="2.5" rx="1.25" fill="#262522"/>
+                <rect width="22" height="2.5" rx="1.25" fill="#262522" />
+                <rect
+                  y="6.5"
+                  width="22"
+                  height="2.5"
+                  rx="1.25"
+                  fill="#262522"
+                />
+                <rect y="13" width="22" height="2.5" rx="1.25" fill="#262522" />
               </svg>
             </div>
           </div>
@@ -135,35 +187,50 @@ export default function Navbar() {
       {/* SEARCH OVERLAY */}
       {showOverlay && (
         <div className="search-overlay" onClick={closeOverlay}>
-          <div className="search-overlay-content" onClick={e => e.stopPropagation()}>
-            
+          <div
+            className="search-overlay-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
             <div className="search-overlay-header">
               <h2 className="search-overlay-title">
-                DISPLAYING RESULTS FOR:{' '}
-                <span style={{ color: '#F29C33' }}>{searchInput.toUpperCase()}</span>
+                DISPLAYING RESULTS FOR:{" "}
+                <span style={{ color: "#F29C33" }}>
+                  {searchInput.toUpperCase()}
+                </span>
               </h2>
               <p className="search-overlay-count">
                 {searchResults.length} RECIPES FOUND
               </p>
-              <button className="search-overlay-close" onClick={closeOverlay}>✕</button>
+              <button className="search-overlay-close" onClick={closeOverlay}>
+                ✕
+              </button>
             </div>
 
             {/* Results Grid */}
             {searchResults.length === 0 ? (
-              <p style={{ color: '#666', fontFamily: "'Roboto', sans-serif" }}>
+              <p style={{ color: "#666", fontFamily: "'Roboto', sans-serif" }}>
                 No recipes found for "{searchInput}"
               </p>
             ) : (
               <div className="search-results-grid">
                 {searchResults.map((recipe: any) => (
-                  <div key={recipe.id} className="search-result-card"
-                    onClick={() => handleRecipeClick(recipe.id)}>
-                    <img src={recipe.image} alt={recipe.name} className="search-result-img" />
+                  <div
+                    key={recipe.id}
+                    className="search-result-card"
+                    onClick={() => handleRecipeClick(recipe.id)}
+                  >
+                    <img
+                      src={recipe.image}
+                      alt={recipe.name}
+                      className="search-result-img"
+                    />
                     <div className="search-result-info">
                       <h3 className="search-result-name">{recipe.name}</h3>
                       <p className="search-result-meta">
-                        {recipe.prepTimeMinutes} MIN · {recipe.difficulty?.toUpperCase()} · {recipe.servings} SERVES
+                        {recipe.prepTimeMinutes} MIN ·{" "}
+                        {recipe.difficulty?.toUpperCase()} · {recipe.servings}{" "}
+                        SERVES
                       </p>
                       <button className="search-result-btn">VIEW RECIPE</button>
                     </div>
@@ -186,12 +253,32 @@ export default function Navbar() {
                   <div className="logo-circle-mid"></div>
                   <div className="logo-circle-inner"></div>
                 </div>
-                <span className="drawer-logo-text">Cooks<br/>Delight</span>
+                <span className="drawer-logo-text">
+                  Cooks
+                  <br />
+                  Delight
+                </span>
               </div>
-              <button className="drawer-close-btn" onClick={() => setMenuOpen(false)}>
+              <button
+                type="button"
+                className="drawer-close-btn"
+                onClick={() => setMenuOpen(false)}
+                title="Close Menu"
+                aria-label="Close Menu"
+              >
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <path d="M1.5 1.5L11.5 11.5" stroke="#F29C33" strokeWidth="2.2" strokeLinecap="round"/>
-                  <path d="M11.5 1.5L1.5 11.5" stroke="#F29C33" strokeWidth="2.2" strokeLinecap="round"/>
+                  <path
+                    d="M1.5 1.5L11.5 11.5"
+                    stroke="#F29C33"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M11.5 1.5L1.5 11.5"
+                    stroke="#F29C33"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </button>
             </div>
@@ -199,42 +286,92 @@ export default function Navbar() {
               {links.map((link) => {
                 if (link.name === "RECIPES") {
                   return (
-                    <a key={link.path} href="#" onClick={handleRecipesClick}
-                      className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}>
+                    <a
+                      key={link.path}
+                      href="#"
+                      onClick={handleRecipesClick}
+                      className={
+                        isActiveLink(link.path)
+                          ? "drawer-link active"
+                          : "drawer-link"
+                      }
+                    >
                       {link.name}
                     </a>
                   );
                 }
                 return (
-                  <Link key={link.path} to={link.path} onClick={() => setMenuOpen(false)}
-                    className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}>
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMenuOpen(false)}
+                    className={
+                      isActiveLink(link.path)
+                        ? "drawer-link active"
+                        : "drawer-link"
+                    }
+                  >
                     {link.name}
                   </Link>
                 );
               })}
             </div>
             <div className="drawer-footer">
-              <button className="drawer-signup-btn" onClick={() => { navigate('/login'); setMenuOpen(false); }}>
+              <button
+                className="drawer-signup-btn"
+                onClick={() => {
+                  navigate("/login");
+                  setMenuOpen(false);
+                }}
+              >
                 SIGN UP NOW!
               </button>
             </div>
             <div className="drawer-socials">
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 2H15C13.67 2 12.4 2.53 11.46 3.46C10.53 4.4 10 5.67 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73 14.11 6.48 14.29 6.29C14.48 6.11 14.73 6 15 6H18V2Z" stroke="#F0EBE1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M18 2H15C13.67 2 12.4 2.53 11.46 3.46C10.53 4.4 10 5.67 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73 14.11 6.48 14.29 6.29C14.48 6.11 14.73 6 15 6H18V2Z"
+                    stroke="#F0EBE1"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </a>
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="#F0EBE1" strokeWidth="1.8"/>
-                  <circle cx="12" cy="12" r="4" stroke="#F0EBE1" strokeWidth="1.8"/>
-                  <circle cx="17.5" cy="6.5" r="1.2" fill="#F0EBE1"/>
+                  <rect
+                    x="2"
+                    y="2"
+                    width="20"
+                    height="20"
+                    rx="5"
+                    stroke="#F0EBE1"
+                    strokeWidth="1.8"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="4"
+                    stroke="#F0EBE1"
+                    strokeWidth="1.8"
+                  />
+                  <circle cx="17.5" cy="6.5" r="1.2" fill="#F0EBE1" />
                 </svg>
               </a>
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="5" width="20" height="14" rx="4" stroke="#F0EBE1" strokeWidth="1.8"/>
-                  <path d="M10 9L16 12L10 15V9Z" fill="#F0EBE1"/>
+                  <rect
+                    x="2"
+                    y="5"
+                    width="20"
+                    height="14"
+                    rx="4"
+                    stroke="#F0EBE1"
+                    strokeWidth="1.8"
+                  />
+                  <path d="M10 9L16 12L10 15V9Z" fill="#F0EBE1" />
                 </svg>
               </a>
             </div>

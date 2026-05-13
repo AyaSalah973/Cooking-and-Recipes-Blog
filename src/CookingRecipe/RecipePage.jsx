@@ -15,7 +15,6 @@ function RecipePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     fetch(`https://dummyjson.com/recipes/${id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -32,7 +31,7 @@ function RecipePage() {
   if (!recipe) return <h2 className={styles['error-text']}>Recipe not found!</h2>;
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${document.body.classList.contains("dark") ? styles.dark : ""}`}>
 
       {/* RECIPE CARD أول */}
       <div className={styles.container}>
