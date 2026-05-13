@@ -156,7 +156,22 @@ h1 {
     color: #F29C33;
     text-decoration: underline;
 }
+/* Add to login.module.css */
+.error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    text-align: center;
+    border: 1px solid #fecaca;
+}
 
+.signup-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 
 @media (max-width: 850px) {
     .login-card {
