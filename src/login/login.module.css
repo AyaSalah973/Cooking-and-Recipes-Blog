@@ -201,3 +201,54 @@ h1 {
     }
 }
 
+:global(body.dark) {
+  background: #121212;
+}
+
+:global(body.dark) .page-wrapper {
+  background: #121212;
+}
+
+:global(body.dark) .login-card {
+  background: #1f1f1f;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+:global(body.dark) .form-section {
+  background: #181818;
+}
+
+:global(body.dark) h1,
+:global(body.dark) .welcome-text,
+:global(body.dark) .footer-text,
+:global(body.dark) label {
+  color: white !important;
+}
+
+:global(body.dark) .input-group input {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+}
+
+:global(body.dark) .input-group input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+:global(body.dark) .input-group input:focus {
+  border-color: #F29C33;
+  background: #333;
+}
+
+:global(body.dark) .divider {
+  background: #333;
+}
+
+:global(body.dark) .footer-text a {
+  color: #F29C33;
+}
+
+:global(body.dark) .signup-btn {
+  background: #F29C33;
+  color: #121212;
+}

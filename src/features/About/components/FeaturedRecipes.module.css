@@ -5,7 +5,7 @@
   margin-top: 40px;
   padding: 24px;
   border-radius: 32px;
-  background: #F0EBE1;
+  background: #f0ebe1;
   border: 1px solid rgba(38, 37, 34, 0.15);
 }
 
@@ -36,8 +36,8 @@
 }
 
 .arrows button:hover:not(:disabled) {
-  background: #F29C33;
-  border-color: #F29C33;
+  background: #f29c33;
+  border-color: #f29c33;
   color: white;
 }
 
@@ -55,7 +55,7 @@
 
 /* card */
 .recipe-card {
-  background: #FFFBF2;
+  background: #fffbf2;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -110,7 +110,57 @@
 }
 
 .view-btn:hover {
-  background: #F29C33;
-  border-color: #F29C33;
+  background: #f29c33;
+  border-color: #f29c33;
   color: white;
+}
+:global(body.dark) .featured {
+  background: #181818;
+  border-color: #333;
+}
+:global(body.dark) .featured-header h2 {
+  color: white;
+}
+
+:global(body.dark) .recipe-card {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+:global(body.dark) .recipe-card .card-content h3 {
+  color: #ffffff !important;
+}
+
+:global(body.dark) .recipe-card .card-content p {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+:global(body.dark) .recipe-card .card-footer span {
+  color: #ffffff !important;
+}
+
+:global(body.dark) .recipe-card .view-btn {
+  color: white !important;
+}
+:global(body.dark) .card-footer span {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+:global(body.dark) .view-btn {
+  border-color: #555;
+  color: white;
+}
+
+:global(body.dark) .view-btn:hover {
+  background: #f29c33;
+  border-color: #f29c33;
+}
+
+:global(body.dark) .arrows button {
+  border-color: #555;
+  color: white;
+}
+
+:global(body.dark) .arrows button:hover:not(:disabled) {
+  background: #f29c33;
+  border-color: #f29c33;
 }

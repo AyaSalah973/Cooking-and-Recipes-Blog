@@ -595,3 +595,58 @@
 }
 
 
+:global(body.dark) .featured {
+  background: #181818 !important;
+  border: 1px solid #333 !important;
+}
+
+:global(body.dark) .recipe-card {
+  background: #242424 !important;
+  border: 1px solid #3a3a3a !important;
+}
+
+:global(body.dark) .card-content {
+  background: #242424 !important;
+}
+
+:global(body.dark) .card-content h3 {
+  color: #ffffff !important;
+}
+
+:global(body.dark) .card-content p {
+  color: #bdbdbd !important;
+}
+
+:global(body.dark) .card-footer span {
+  color: #ffffff !important;
+}
+
+:global(body.dark) .view-btn {
+  color: #ffffff !important;
+  border-color: #666 !important;
+}
+
+:global(body.dark) .featured-header h2 {
+  color: white !important;
+}
+:global(body.dark) .about-preview {
+  background: #181818 !important;
+  border: 1px solid #333 !important;
+}
+
+:global(body.dark) .about-left h2 {
+  color: white !important;
+}
+
+:global(body.dark) .about-left p {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+:global(body.dark) .read-more-btn {
+  color: white !important;
+  border-color: #555 !important;
+}
+
+:global(body.dark) .read-more-btn:hover {
+  background: #2a2a2a;
+}

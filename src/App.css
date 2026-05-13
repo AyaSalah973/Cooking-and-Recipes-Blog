@@ -1,3 +1,74 @@
+:root {
+  --bg-color: #f5f1e8;
+  --text-color: #262522;
+  --card-bg: #fffbf2;
+  --border-color: #d8d2c7;
+}
+
+.dark {
+  --bg-color: #1c1c1c;
+  --text-color: #ffffff;
+  --card-bg: #2a2a2a;
+  --border-color: #444;
+}
+
+.app {
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: 0.3s ease;
+}
+
+.dark-btn {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+  margin-right: 14px;
+
+  color: #262522;
+}
+
+.dark-btn svg {
+  font-size: 20px;
+  transition: 0.3s ease;
+}
+
+.dark-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.dark-btn:active {
+  transform: scale(0.96);
+}
+
+.dark-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+body.dark {
+  background: #1c1c1c;
+  color: white;
+}
 /* .counter {
   font-size: 16px;
   padding: 5px 10px;

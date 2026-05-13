@@ -1,6 +1,9 @@
 /* products page */
-* * { margin: 0; padding: 0; box-sizing: border-box; }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   font-family: 'Georgia', sans-serif;
   background: #ede9e1;
@@ -16,7 +19,7 @@ body {
 
 .page {
   max-width: 95%;
-  margin: 40px auto 0;  /* ← غيري 0 auto لـ 40px auto 0 */
+  margin: 40px auto 0;  
   padding: 80px 20px;
   display: flex;
   flex-direction: column;
@@ -743,3 +746,98 @@ letter-spacing: 1%;
   }
 }
 
+:global(body.dark) {
+  background: #121212;
+}
+
+:global(body.dark) .page {
+  background: #121212 !important;
+}
+
+:global(body.dark) .newest-section,
+:global(body.dark) .basics-section,
+:global(body.dark) .tips-section {
+  background: #1f1f1f !important;
+  border-color: #333 !important;
+}
+
+:global(body.dark) .newest-card,
+:global(body.dark) .basic-card,
+:global(body.dark) .tip-card {
+  background: #2a2a2a !important;
+  border-color: #444 !important;
+}
+
+:global(body.dark) h1,
+:global(body.dark) h2,
+:global(body.dark) h3,
+:global(body.dark) p,
+:global(body.dark) span,
+:global(body.dark) strong {
+  color: white !important;
+}
+
+:global(body.dark) .newest-desc {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+:global(body.dark) .view-btn,
+:global(body.dark) .read-btn,
+:global(body.dark) .arrow {
+  color: white !important;
+  border-color: #666 !important;
+}
+:global(body.dark) .nourish-section {
+  background: #181818 !important;
+  border: 1px solid #333 !important;
+}
+
+:global(body.dark) .nourish-card {
+  background: #2a2a2a !important;
+}
+
+:global(body.dark) .nourish-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.85),
+    rgba(0,0,0,0.2)
+  ) !important;
+}
+
+:global(body.dark) .white-btn {
+  background: transparent !important;
+  border: 1px solid #666 !important;
+  color: white !important;
+}
+
+:global(body.dark) .white-btn:hover {
+  background: #333 !important;
+}
+
+:global(body.dark) .light {
+  color: rgba(255,255,255,0.8) !important;
+}
+:global(body.dark) .white-btn,
+:global(body.dark) .read-btn,
+:global(body.dark) .view-btn {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid #666 !important;
+}
+
+:global(body.dark) .white-btn:hover,
+:global(body.dark) .read-btn:hover,
+:global(body.dark) .view-btn:hover {
+  background: #333 !important;
+  color: #fff !important;
+}
+:global(body.dark) .arrow {
+  background: transparent !important;
+  border: 1px solid #666 !important;
+  color: #fff !important;
+}
+
+:global(body.dark) .arrow:hover {
+  background: #333 !important;
+  color: #fff !important;
+}

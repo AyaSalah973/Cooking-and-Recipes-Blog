@@ -3,7 +3,6 @@ import "./Footer.css";
 import logo from "../assets/Logo Footer.png";  
 import { FaTiktok, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';  
-import { useState } from 'react';  
 
 function Footer() {
   const navigate = useNavigate(); 
