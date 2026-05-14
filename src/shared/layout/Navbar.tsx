@@ -1,149 +1,347 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 import "./Navbar.css";
 
+declare global {
+  interface Window {
+    googleTranslateElementInit: () => void;
+    google: any;
+  }
+}
 
 export default function Navbar() {
+
   const location = useLocation();
+
   const navigate = useNavigate();
+
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [searchInput, setSearchInput] = useState("");
+
   const [searchResults, setSearchResults] = useState([]);
+
   const [allRecipes, setAllRecipes] = useState([]);
+
   const [showOverlay, setShowOverlay] = useState(false);
+
   const [darkMode, setDarkMode] = useState(false);
 
-  // جيبي كل الوصفات مرة واحدة
+  const { t, i18n } = useTranslation();
+
+  /* FETCH RECIPES */
   useEffect(() => {
+
     fetch("https://dummyjson.com/recipes?limit=50")
+
       .then((res) => res.json())
+
       .then((data) => setAllRecipes(data.recipes));
+
   }, []);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /* GOOGLE TRANSLATE */
+  useEffect(() => {
+
+    const addGoogleTranslate = () => {
+
+      if (
+        !document.getElementById(
+          "google_translate_script"
+        )
+      ) {
+
+        const script =
+          document.createElement("script");
+
+        script.id =
+          "google_translate_script";
+
+        script.src =
+          "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+
+        script.async = true;
+
+        document.body.appendChild(script);
+      }
+
+      window.googleTranslateElementInit =
+        () => {
+
+          new window.google.translate.TranslateElement(
+            {
+              pageLanguage: "en",
+              includedLanguages: "ar,en",
+              autoDisplay: false,
+            },
+            "google_translate_element"
+          );
+        };
+    };
+
+    addGoogleTranslate();
+
+  }, []);
+
+  /* SEARCH */
+  const handleSearchChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+
     const value = e.target.value;
+
     setSearchInput(value);
+
     if (value.trim()) {
-      navigate(`/recipes?search=${encodeURIComponent(value)}`);
+
+      navigate(
+        `/recipes?search=${encodeURIComponent(value)}`
+      );
+
     } else {
+
       navigate("/recipes");
     }
   };
 
   const handleRecipeClick = (id: number) => {
+
     navigate(`/recipe/${id}`);
+
     setShowOverlay(false);
+
     setSearchInput("");
+
     setSearchResults([]);
   };
 
   const closeOverlay = () => {
+
     setShowOverlay(false);
+
     setSearchInput("");
+
     setSearchResults([]);
   };
 
-const toggleDarkMode = () => {
-  if (document.body.classList.contains("dark")) {
-    document.body.classList.remove("dark");
-    setDarkMode(false);
-  } else {
-    document.body.classList.add("dark");
-    setDarkMode(true);
-  }
-};
+  /* DARK MODE */
+  const toggleDarkMode = () => {
+
+    if (document.body.classList.contains("dark")) {
+
+      document.body.classList.remove("dark");
+
+      setDarkMode(false);
+
+    } else {
+
+      document.body.classList.add("dark");
+
+      setDarkMode(true);
+    }
+  };
+
+  /* NAV LINKS */
   const links = [
-    { name: "HOME", path: "/" },
-    { name: "RECIPES", path: "/recipes" },
-    { name: "COOKING TIPS", path: "/tips" },
-    { name: "ABOUT US", path: "/about" },
+    { name: t("home"), path: "/" },
+
+    { name: t("recipes"), path: "/recipes" },
+
+    { name: t("cookingTips"), path: "/tips" },
+
+    { name: t("aboutUs"), path: "/about" },
   ];
 
-  const handleRecipesClick = async (e: React.MouseEvent) => {
+  const handleRecipesClick = async (
+    e: React.MouseEvent
+  ) => {
+
     e.preventDefault();
+
     try {
-      const response = await fetch("https://dummyjson.com/recipes");
+
+      const response =
+        await fetch("https://dummyjson.com/recipes");
+
       const data = await response.json();
-      if (data.recipes && data.recipes.length > 0) {
-        navigate(`/recipe/${data.recipes[0].id}`);
+
+      if (
+        data.recipes &&
+        data.recipes.length > 0
+      ) {
+
+        navigate(
+          `/recipe/${data.recipes[0].id}`
+        );
       }
+
     } catch {
+
       navigate("/recipes");
     }
+
     setMenuOpen(false);
   };
 
   const isActiveLink = (path: string) => {
-    if (path === "/") return location.pathname === "/";
-    if (path === "/recipes" && location.pathname.startsWith("/recipe"))
+
+    if (path === "/")
+      return location.pathname === "/";
+
+    if (
+      path === "/recipes" &&
+      location.pathname.startsWith("/recipe")
+    )
       return true;
-    if (path === "/tips") return location.pathname === "/tips";
-    if (path === "/about") return location.pathname === "/about";
+
+    if (path === "/tips")
+      return location.pathname === "/tips";
+
+    if (path === "/about")
+      return location.pathname === "/about";
+
     return false;
   };
 
   return (
     <>
       <div className="navbar-wrapper">
+
         <div className="navbar">
-          {/* LEFT: Logo */}
+
+          {/* LEFT */}
           <div className="navbar-left">
+
             <div className="logo-icon">
+
               <div className="logo-circle-outer"></div>
+
               <div className="logo-circle-mid"></div>
+
               <div className="logo-circle-inner"></div>
+
             </div>
+
             <span className="logo-text">
               Cooks
               <br />
               Delight
             </span>
+
           </div>
 
-          {/* CENTER: Links */}
+          {/* CENTER */}
           <div className="navbar-links">
+
             {links.map((link) => {
-              if (link.name === "RECIPES") {
+
+              if (link.path === "/recipes") {
+
                 return (
                   <a
                     key={link.path}
                     href="#"
                     onClick={handleRecipesClick}
                     className={
-                      isActiveLink(link.path) ? "nav-link active" : "nav-link"
+                      isActiveLink(link.path)
+                        ? "nav-link active"
+                        : "nav-link"
                     }
                   >
                     {link.name}
                   </a>
                 );
               }
+
               return (
                 <Link
                   key={link.path}
                   to={link.path}
                   className={
-                    isActiveLink(link.path) ? "nav-link active" : "nav-link"
+                    isActiveLink(link.path)
+                      ? "nav-link active"
+                      : "nav-link"
                   }
                 >
                   {link.name}
                 </Link>
               );
             })}
+
           </div>
 
-          {/* RIGHT: Search */}
+          {/* RIGHT */}
           <div className="navbar-right">
-            <button type="button" className="dark-btn" onClick={toggleDarkMode}>
+
+            {/* DARK MODE */}
+            <button
+              type="button"
+              className="dark-btn"
+              onClick={toggleDarkMode}
+            >
               {darkMode ? <FiSun /> : <FiMoon />}
             </button>
+
+            {/* LANGUAGE */}
+            <div className="lang-switch">
+
+              <button
+                className={
+                  i18n.language === "en"
+                    ? "active-lang"
+                    : ""
+                }
+                onClick={() => {
+
+                  i18n.changeLanguage("en");
+
+                  document.cookie =
+                    "googtrans=/ar/en";
+
+                  window.location.reload();
+                }}
+              >
+                EN
+              </button>
+
+              <button
+                className={
+                  i18n.language === "ar"
+                    ? "active-lang"
+                    : ""
+                }
+                onClick={() => {
+
+                  i18n.changeLanguage("ar");
+
+                  document.cookie =
+                    "googtrans=/en/ar";
+
+                  window.location.reload();
+                }}
+              >
+                عربي
+              </button>
+
+            </div>
+
+            {/* SEARCH */}
             <div className="search-box">
+
               <button
                 className="search-icon-btn"
                 title="Search"
                 aria-label="Search"
               >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                >
+
                   <circle
                     cx="7.5"
                     cy="7.5"
@@ -151,25 +349,47 @@ const toggleDarkMode = () => {
                     stroke="#262522"
                     strokeWidth="2"
                   />
+
                   <path
                     d="M12 12L16 16"
                     stroke="#262522"
                     strokeWidth="2"
                     strokeLinecap="round"
                   />
+
                 </svg>
               </button>
+
               <input
                 type="text"
-                placeholder="Search recipes..."
+                placeholder={t("searchRecipes")}
                 value={searchInput}
                 onChange={handleSearchChange}
                 className="search-input"
               />
+
             </div>
-            <div className="menu-icon" onClick={() => setMenuOpen(true)}>
-              <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                <rect width="22" height="2.5" rx="1.25" fill="#262522" />
+
+            {/* MENU */}
+            <div
+              className="menu-icon"
+              onClick={() => setMenuOpen(true)}
+            >
+
+              <svg
+                width="22"
+                height="16"
+                viewBox="0 0 22 16"
+                fill="none"
+              >
+
+                <rect
+                  width="22"
+                  height="2.5"
+                  rx="1.25"
+                  fill="#262522"
+                />
+
                 <rect
                   y="6.5"
                   width="22"
@@ -177,205 +397,131 @@ const toggleDarkMode = () => {
                   rx="1.25"
                   fill="#262522"
                 />
-                <rect y="13" width="22" height="2.5" rx="1.25" fill="#262522" />
+
+                <rect
+                  y="13"
+                  width="22"
+                  height="2.5"
+                  rx="1.25"
+                  fill="#262522"
+                />
+
               </svg>
+
             </div>
+
           </div>
         </div>
       </div>
 
       {/* SEARCH OVERLAY */}
       {showOverlay && (
-        <div className="search-overlay" onClick={closeOverlay}>
+
+        <div
+          className="search-overlay"
+          onClick={closeOverlay}
+        >
+
           <div
             className="search-overlay-content"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
           >
-            {/* Header */}
+
             <div className="search-overlay-header">
+
               <h2 className="search-overlay-title">
-                DISPLAYING RESULTS FOR:{" "}
+
+                {t("displayingResults")}{" "}
+
                 <span style={{ color: "#F29C33" }}>
                   {searchInput.toUpperCase()}
                 </span>
+
               </h2>
+
               <p className="search-overlay-count">
-                {searchResults.length} RECIPES FOUND
+                {searchResults.length}{" "}
+                {t("recipesFound")}
               </p>
-              <button className="search-overlay-close" onClick={closeOverlay}>
+
+              <button
+                className="search-overlay-close"
+                onClick={closeOverlay}
+              >
                 ✕
               </button>
+
             </div>
 
-            {/* Results Grid */}
             {searchResults.length === 0 ? (
-              <p style={{ color: "#666", fontFamily: "'Roboto', sans-serif" }}>
-                No recipes found for "{searchInput}"
-              </p>
-            ) : (
-              <div className="search-results-grid">
-                {searchResults.map((recipe: any) => (
-                  <div
-                    key={recipe.id}
-                    className="search-result-card"
-                    onClick={() => handleRecipeClick(recipe.id)}
-                  >
-                    <img
-                      src={recipe.image}
-                      alt={recipe.name}
-                      className="search-result-img"
-                    />
-                    <div className="search-result-info">
-                      <h3 className="search-result-name">{recipe.name}</h3>
-                      <p className="search-result-meta">
-                        {recipe.prepTimeMinutes} MIN ·{" "}
-                        {recipe.difficulty?.toUpperCase()} · {recipe.servings}{" "}
-                        SERVES
-                      </p>
-                      <button className="search-result-btn">VIEW RECIPE</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
-      {/* MOBILE DRAWER */}
-      {menuOpen && (
-        <div className="drawer-overlay" onClick={() => setMenuOpen(false)}>
-          <div className="drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <div className="drawer-logo-row">
-                <div className="logo-icon logo-icon-sm">
-                  <div className="logo-circle-outer"></div>
-                  <div className="logo-circle-mid"></div>
-                  <div className="logo-circle-inner"></div>
-                </div>
-                <span className="drawer-logo-text">
-                  Cooks
-                  <br />
-                  Delight
-                </span>
-              </div>
-              <button
-                type="button"
-                className="drawer-close-btn"
-                onClick={() => setMenuOpen(false)}
-                title="Close Menu"
-                aria-label="Close Menu"
-              >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <path
-                    d="M1.5 1.5L11.5 11.5"
-                    stroke="#F29C33"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M11.5 1.5L1.5 11.5"
-                    stroke="#F29C33"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="drawer-links">
-              {links.map((link) => {
-                if (link.name === "RECIPES") {
-                  return (
-                    <a
-                      key={link.path}
-                      href="#"
-                      onClick={handleRecipesClick}
-                      className={
-                        isActiveLink(link.path)
-                          ? "drawer-link active"
-                          : "drawer-link"
-                      }
-                    >
-                      {link.name}
-                    </a>
-                  );
-                }
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setMenuOpen(false)}
-                    className={
-                      isActiveLink(link.path)
-                        ? "drawer-link active"
-                        : "drawer-link"
-                    }
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
-            </div>
-            <div className="drawer-footer">
-              <button
-                className="drawer-signup-btn"
-                onClick={() => {
-                  navigate("/login");
-                  setMenuOpen(false);
+              <p
+                style={{
+                  color: "#666",
+                  fontFamily:
+                    "'Roboto', sans-serif",
                 }}
               >
-                SIGN UP NOW!
-              </button>
-            </div>
-            <div className="drawer-socials">
-              <a href="#" className="social-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M18 2H15C13.67 2 12.4 2.53 11.46 3.46C10.53 4.4 10 5.67 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73 14.11 6.48 14.29 6.29C14.48 6.11 14.73 6 15 6H18V2Z"
-                    stroke="#F0EBE1"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-              <a href="#" className="social-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect
-                    x="2"
-                    y="2"
-                    width="20"
-                    height="20"
-                    rx="5"
-                    stroke="#F0EBE1"
-                    strokeWidth="1.8"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="4"
-                    stroke="#F0EBE1"
-                    strokeWidth="1.8"
-                  />
-                  <circle cx="17.5" cy="6.5" r="1.2" fill="#F0EBE1" />
-                </svg>
-              </a>
-              <a href="#" className="social-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect
-                    x="2"
-                    y="5"
-                    width="20"
-                    height="14"
-                    rx="4"
-                    stroke="#F0EBE1"
-                    strokeWidth="1.8"
-                  />
-                  <path d="M10 9L16 12L10 15V9Z" fill="#F0EBE1" />
-                </svg>
-              </a>
-            </div>
+                {t("noRecipesFound")} "
+                {searchInput}"
+              </p>
+
+            ) : (
+
+              <div className="search-results-grid">
+
+                {searchResults.map(
+                  (recipe: any) => (
+
+                    <div
+                      key={recipe.id}
+                      className="search-result-card"
+                      onClick={() =>
+                        handleRecipeClick(recipe.id)
+                      }
+                    >
+
+                      <img
+                        src={recipe.image}
+                        alt={recipe.name}
+                        className="search-result-img"
+                      />
+
+                      <div className="search-result-info">
+
+                        <h3 className="search-result-name">
+                          {recipe.name}
+                        </h3>
+
+                        <p className="search-result-meta">
+
+                          {recipe.prepTimeMinutes}
+                          {" "}
+                          MIN ·{" "}
+
+                          {recipe.difficulty?.toUpperCase()}
+                          {" "}
+                          · {recipe.servings} SERVES
+
+                        </p>
+
+                        <button className="search-result-btn">
+                          {t("viewRecipe")}
+                        </button>
+
+                      </div>
+
+                    </div>
+                  )
+                )}
+
+              </div>
+            )}
+
           </div>
+
         </div>
       )}
     </>

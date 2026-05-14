@@ -1,13 +1,15 @@
 // src/components/Footer.jsx
 import "./Footer.css";
-import logo from "../assets/Logo Footer.png";  
+import logo from "../assets/Logo Footer.png";
 import { FaTiktok, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-import { Link, useNavigate } from 'react-router-dom';  
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  // دالة لزر RECIPES - يجيب أول وصفة (نفس اللي في Navbar)
+  const { t } = useTranslation();
+
   const handleRecipesClick = async (e) => {
     e.preventDefault();
     try {
@@ -34,30 +36,32 @@ function Footer() {
 
         <ul className="footer-links">
           <li>
-            <Link to="/">HOME</Link>
+            <Link to="/">{t("home")}</Link>
           </li>
           <li>
-            <a href="#" onClick={handleRecipesClick}>RECIPES</a>  {/* 👈 نفس وظيفة Navbar */}
+            <a href="#" onClick={handleRecipesClick}>
+              {t("recipes")}
+            </a>
           </li>
           <li>
-            <Link to="/tips">COOKING TIPS</Link>
+            <Link to="/tips">{t("cookingTips")}</Link>
           </li>
           <li>
-            <Link to="/about">ABOUT US</Link>
+            <Link to="/about">{t("about")}</Link>
           </li>
         </ul>
 
         <div className="footer-social">
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
             <FaTiktok />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
             <FaFacebookF />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
             <FaInstagram />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
             <FaYoutube />
           </a>
         </div>
@@ -65,7 +69,7 @@ function Footer() {
 
       <hr />
 
-      <p className="copyright">COPYRIGHT: © 2024 COOKS DELIGHT.</p>
+      <p className="copyright">{t("copyright")}</p>
     </footer>
   );
 }

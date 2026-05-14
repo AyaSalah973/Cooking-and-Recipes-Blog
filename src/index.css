@@ -11,6 +11,21 @@ body.dark {
   --text-color: #ffffff;
   --border-color: rgba(255,255,255,0.08);
 }
+body {
+  top: 0 !important;
+}
+
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
 /* :root {
   --text: #6b6375;
   --text-h: #08060d;
