@@ -1,3 +1,6 @@
+import React from "react";
+import "../styles/GallerySection.css";
+
 const galleryImages = [
   { id: 1, url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop', title: 'Kitchen Prep' },
   { id: 2, url: 'https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=400&h=300&fit=crop', title: 'Cooking' },
@@ -11,29 +14,13 @@ const galleryImages = [
 
 export const GallerySection: React.FC = () => {
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: '12px',
-    }}>
+    <div className="gallery__grid">
       {galleryImages.map((image) => (
-        <div key={image.id} style={{
-          borderRadius: '16px',
-          overflow: 'hidden',
-          position: 'relative',
-        }}>
+        <div key={image.id} className="gallery__item">
           <img
             src={image.url}
             alt={image.title}
-            style={{
-              width: '100%',
-              height: '220px',
-              objectFit: 'cover',
-              display: 'block',
-              transition: 'transform 0.4s ease',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+            className="gallery__img"
           />
         </div>
       ))}

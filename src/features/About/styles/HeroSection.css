@@ -1,0 +1,139 @@
+/* =========================================================
+   HERO (same style as AboutUs)
+   ========================================================= */
+.hero {
+  padding: 64px 0;
+  display: flex;
+justify-content: flex-start;
+  text-align: left;
+}
+
+.hero__inner {
+  width: 100%;
+  max-width: 1312px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* LEFT */
+.hero__left {
+  flex: 1;
+}
+
+/* TITLE */
+.hero__heading {
+  text-align: left;
+  font-size: clamp(40px, 5.5vw, 80px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #262522;
+  margin: 0;
+  font-family: 'Montserrat', 'Lato', 'Helvetica Neue', Arial, sans-serif;
+
+  animation: hero-slide-up 0.6s ease both;
+}
+
+/* RIGHT */
+.hero__right {
+  flex: 1;
+  padding-top: 8px;
+
+  animation: hero-slide-up 0.6s 0.15s ease both;
+}
+
+/* TEXT */
+.hero__text {
+  font-size: 21px;
+  line-height: 1.4;
+  color: #26252299;
+  margin: 0 0 28px;
+  max-width: 648px;
+
+  animation: hero-fade-in 0.8s ease 0.3s both;
+}
+
+/* BUTTON */
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 48px;
+  padding: 0 32px;
+  border-radius: 24px;
+
+  background: #F29C33;
+  color: #262522;
+
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  border: none;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+  box-shadow: 0 4px 16px rgba(224, 140, 46, 0.35);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__btn:hover {
+  background: #c97c20;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(224, 140, 46, 0.45);
+}
+
+/* ANIMATION */
+@keyframes hero-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* TABLET */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hero__inner {
+    gap: 36px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .hero {
+    padding: 36px 0 32px;
+  }
+
+  .hero__inner {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .hero__text {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  .hero__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
