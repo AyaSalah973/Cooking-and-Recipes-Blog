@@ -4,7 +4,11 @@ import { AboutPage } from './features/About/AboutPage';
 import Home from './features/About/pages/Home';
 import Navbar from './shared/layout/Navbar';
 // @ts-ignore
-import Login from './login/login';
+import Login from './features/login/login';
+// @ts-ignore
+import Register from './features/register/Register';
+// @ts-ignore
+import Profile from './features/profile/Profile';
 // @ts-ignore
 import RecipePage from './CookingRecipe/RecipePage';
 // @ts-ignore
@@ -25,6 +29,15 @@ const MainLayout = () => {
     </>
   );
 };
+const ProfileLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />   {/* بس Footer من غير Banner */}
+    </>
+  );
+};
 
 const BlankLayout = () => {
   return <Outlet />;
@@ -40,6 +53,7 @@ export const router = createBrowserRouter([
       { path: 'tips', element: <Products /> },
       { path: 'recipe/:id', element: <RecipePage /> },
       { path: 'about', element: <AboutPage /> },
+      
     ],
   },
   {
@@ -47,6 +61,20 @@ export const router = createBrowserRouter([
     element: <BlankLayout />,
     children: [
       { index: true, element: <Login /> },
+    ],
+  },
+  {
+    path: '/profile',
+    element: <ProfileLayout />,  // ✅ Layout مخصص من غير Banner
+    children: [
+      { index: true, element: <Profile /> },
+    ],
+  },
+  {  // 👈 قسم جديد لصفحة التسجيل
+    path: '/register',
+    element: <BlankLayout />,
+    children: [
+      { index: true, element: <Register /> },
     ],
   },
 ]);

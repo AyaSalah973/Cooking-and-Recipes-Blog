@@ -1,0 +1,956 @@
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 32px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 30px;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.close:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.mode-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.header h2 {
+  font-size: 24px;
+  color: #F29C33;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Progress */
+.step-progress {
+  margin-bottom: 25px;
+}
+
+.progress {
+  background: #eee;
+  border-radius: 10px;
+  height: 8px;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  background: #F29C33;
+  border-radius: 10px;
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.step-progress span {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Current Step */
+.current-step {
+  background: #F9F9F9;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.current-step h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #F29C33;
+}
+
+.current-step p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Pro Tip */
+.pro-tip {
+  background: linear-gradient(135deg, #F29C33, #EE6352);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.pro-tip span {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.pro-tip p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Timer Section */
+.timer-section {
+  background: #F0EBE1;
+  padding: 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.timer-section h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #262522;
+}
+
+.timer-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.timer-buttons button {
+  padding: 6px 14px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.timer-buttons button:hover {
+  background: #F29C33;
+  color: white;
+  border-color: #F29C33;
+}
+
+.active-timer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.active-timer span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #EE6352;
+}
+
+.active-timer button {
+  padding: 4px 12px;
+  background: #262522;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actions button:hover:not(:disabled) {
+  background: #F29C33;
+  color: white;
+  border-color: #F29C33;
+}
+
+.actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.finish-btn {
+  background: #22c55e !important;
+  color: white;
+  border-color: #22c55e !important;
+}
+
+.finish-btn:hover {
+  background: #16a34a !important;
+  transform: scale(1.02);
+}
+
+/* Reminder */
+.reminder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #F9F9F9;
+  border-radius: 16px;
+}
+
+.reminder span {
+  font-size: 20px;
+}
+
+.reminder p {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+/* Dark Mode */
+:global(body.dark) .modal {
+  background: #1f1f1f;
+}
+
+:global(body.dark) .header p,
+:global(body.dark) .current-step p {
+  color: #ddd;
+}
+
+:global(body.dark) .current-step {
+  background: #2a2a2a;
+}
+
+:global(body.dark) .timer-section {
+  background: #2a2a2a;
+}
+
+:global(body.dark) .timer-buttons button {
+  background: #1f1f1f;
+  color: white;
+  border-color: #444;
+}
+
+:global(body.dark) .reminder {
+  background: #2a2a2a;
+}
+
+:global(body.dark) .close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================= */
+/* SMART COOKING MODE STYLES */
+/* ========================= */
+
+/* Smart Header */
+.smart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.smart-title h1 {
+  margin-bottom: 5px;
+}
+
+.smart-subtitle {
+  font-size: 13px;
+  color: #F29C33;
+  margin: 0;
+}
+
+/* Mode Toggle */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.toggle-on, .toggle-off {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.toggle-on {
+  background: #22c55e;
+  color: white;
+}
+
+.toggle-off {
+  background: #f0f0f0;
+  color: #999;
+}
+
+.toggle-btn {
+  width: 52px;
+  height: 28px;
+  background: #ddd;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.toggle-slider {
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  transition: all 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-btn.active {
+  background: #F29C33;
+}
+
+.toggle-btn.active .toggle-slider {
+  left: 25px;
+}
+
+/* Smart Features Grid */
+.smart-features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 25px 20px;
+  background: #F9F9F9;
+  border-radius: 24px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #262522;
+}
+
+.feature-card p {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.5;
+}
+
+.feature-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(242, 156, 51, 0.1);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 9px;
+  color: #F29C33;
+  font-weight: 600;
+}
+
+/* Smart Active State */
+.smart-active {
+  margin-top: 30px;
+  background: linear-gradient(135deg, #F29C33, #EE6352);
+  border-radius: 32px;
+  padding: 30px;
+  color: white;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.smart-active-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.smart-active h3 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.smart-active p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+/* Recipe Options */
+.recipe-options h4 {
+  font-size: 14px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.recent-cooking {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.cook-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 10px 20px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.cook-btn:hover {
+  background: rgba(255,255,255,0.35);
+  transform: translateY(-2px);
+}
+
+.cook-btn-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Smart Tip */
+.smart-tip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.smart-tip span {
+  font-size: 24px;
+}
+
+.smart-tip p {
+  font-size: 12px;
+  margin: 0;
+}
+
+/* Smart Inactive State */
+.smart-inactive {
+  text-align: center;
+  padding: 60px 40px;
+  background: #F9F9F9;
+  border-radius: 32px;
+  margin-top: 30px;
+}
+
+.inactive-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.smart-inactive h3 {
+  font-size: 22px;
+  color: #262522;
+  margin-bottom: 10px;
+}
+
+.smart-inactive p {
+  color: #999;
+  font-size: 14px;
+  max-width: 400px;
+  margin: 0 auto 25px;
+}
+
+.activate-btn {
+  padding: 12px 28px;
+  background: #F29C33;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.activate-btn:hover {
+  background: #e08a1f;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(242, 156, 51, 0.3);
+}
+
+/* No Recent Recipes */
+.no-recent-recipes {
+  text-align: center;
+  padding: 30px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 24px;
+  margin-bottom: 20px;
+}
+
+.no-recent-recipes p {
+  margin-bottom: 15px;
+}
+
+.browse-btn {
+  padding: 8px 20px;
+  background: white;
+  border: none;
+  border-radius: 25px;
+  color: #F29C33;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.browse-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .smart-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .smart-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .smart-header {
+    flex-direction: column;
+  }
+  
+  .recent-cooking {
+    flex-direction: column;
+  }
+  
+  .cook-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .smart-active {
+    padding: 20px;
+  }
+}
+
+/* Dark Mode */
+:global(body.dark) .feature-card {
+  background: #2a2a2a;
+}
+
+:global(body.dark) .feature-card h3 {
+  color: white;
+}
+
+:global(body.dark) .smart-inactive {
+  background: #1f1f1f;
+}
+
+:global(body.dark) .smart-inactive h3 {
+  color: white;
+}
+
+:global(body.dark) .toggle-off {
+  background: #333;
+  color: #aaa;
+}
+
+:global(body.dark) .toggle-btn {
+  background: #444;
+}
+
+/* ========================= */
+/* ALERT MODAL FOR TIMER     */
+/* ========================= */
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.alert-modal {
+  background: white;
+  border-radius: 32px;
+  padding: 32px;
+  max-width: 340px;
+  width: 85%;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.alert-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #262522;
+  margin-bottom: 12px;
+}
+
+.alert-message {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.alert-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.alert-ok {
+  padding: 12px 32px;
+  background: #F29C33;
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.alert-ok:hover {
+  background: #e08a1f;
+  transform: scale(1.02);
+}
+
+/* Dark Mode */
+:global(body.dark) .alert-modal {
+  background: #1f1f1f;
+}
+
+:global(body.dark) .alert-title {
+  color: white;
+}
+
+:global(body.dark) .alert-message {
+  color: #aaa;
+}
+/* ========================= */
+/* CONGRATULATIONS MODAL     */
+/* ========================= */
+.congrats-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.congrats-modal {
+  background: linear-gradient(135deg, #fff, #fff8f0);
+  border-radius: 48px;
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  animation: congratsSlideUp 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes congratsSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.confetti {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  font-size: 40px;
+  animation: confettiFall 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(400px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.congrats-icon {
+  font-size: 80px;
+  margin-bottom: 16px;
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.congrats-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #F29C33, #EE6352);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 12px;
+}
+
+.congrats-message {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.congrats-message strong {
+  color: #F29C33;
+  font-weight: 700;
+}
+
+.congrats-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  margin-bottom: 32px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 32px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-item span:first-child {
+  font-size: 24px;
+}
+
+.stat-item span:last-child {
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+
+.congrats-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.congrats-close {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #F29C33, #EE6352);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.congrats-close:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(242, 156, 51, 0.4);
+}
+
+/* Dark Mode */
+:global(body.dark) .congrats-modal {
+  background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+}
+
+:global(body.dark) .congrats-message {
+  color: #aaa;
+}
+
+:global(body.dark) .congrats-stats {
+  background: #2a2a2a;
+}
+
+:global(body.dark) .stat-item span:last-child {
+  color: #777;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { GallerySection } from "./GallerySection";
-import "./AboutSection.css";
+import "../styles/AboutSection.css";
 
 interface AboutSectionProps {
   content: string;
@@ -73,18 +73,13 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </div>
 
           {/* SIGNATURE */}
-          <div className="signature-box">
+          <p className="about-regards">
+  Warmest regards,
+</p>
 
-            <p className="signature-text">
-              Warmest regards,
-              <br />
-
-              <span className="chef-signature">
-                {chefName}
-              </span>
-            </p>
-
-          </div>
+<p className="about-signature">
+  {chefName}
+</p>
         </div>
       </div>
 
