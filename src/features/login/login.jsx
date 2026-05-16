@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './login.module.css';
-import cookingImage from '../assets/pexels-zain-abba-116752359-17450215 1.png';
+import cookingImage from '../../assets/pexels-zain-abba-116752359-17450215 1.png';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -12,61 +12,86 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleLogin = async (e) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
-        // Basic validation
-        if (!username || !password) {
-            setError('Please enter both username and password');
+    if (!username || !password) {
+        setError('Please enter both username and password');
+        setIsLoading(false);
+        return;
+    }
+
+    try {
+        // 🔍 الخطوة 1: البحث في المستخدمين المسجلين محلياً (mockUsers)
+        const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+        const mockUser = mockUsers.find(
+            u => (u.username === username || u.email === username) && u.password === password
+        );
+
+        if (mockUser) {
+            // ✅ تسجيل دخول ناجح من المستخدمين المحليين
+            console.log('Login successful (local user):', mockUser);
+            
+            localStorage.setItem('user', JSON.stringify({
+                id: mockUser.id,
+                username: mockUser.username,
+                email: mockUser.email,
+                firstName: mockUser.firstName,
+                lastName: mockUser.lastName,
+                image: 'https://dummyjson.com/icon/no-photo/128'
+            }));
+            localStorage.setItem('accessToken', 'mock-token-' + mockUser.id);
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            navigate('/tips');
             setIsLoading(false);
             return;
         }
 
-        try {
-            const response = await fetch('https://dummyjson.com/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    expiresInMins: 30,
-                }),
-                credentials: 'include'
-            });
+        // 🔍 الخطوة 2: البحث في DummyJSON (للمستخدمين الافتراضيين)
+        const response = await fetch('https://dummyjson.com/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                expiresInMins: 30,
+            }),
+            credentials: 'include'
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed. Please check your credentials.');
-            }
-
-            // Login successful
-            console.log('Login successful:', data);
-            
-            // Store user data and tokens
-            localStorage.setItem('user', JSON.stringify({
-                id: data.id,
-                username: data.username,
-                email: data.email,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                gender: data.gender,
-                image: data.image
-            }));
-            
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            
-            navigate('/tips');
-            
-        } catch (err) {
-            setError(err.message || 'An error occurred during login');
-            console.error('Login error:', err);
-        } finally {
-            setIsLoading(false);
+        if (!response.ok) {
+            throw new Error(data.message || 'Login failed. Please check your credentials.');
         }
-    };
+
+        // ✅ تسجيل دخول ناجح من DummyJSON
+        console.log('Login successful (DummyJSON user):', data);
+        
+        localStorage.setItem('user', JSON.stringify({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            gender: data.gender,
+            image: data.image
+        }));
+        
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        
+        navigate('/tips');
+        
+    } catch (err) {
+        setError(err.message || 'Invalid username or password');
+        console.error('Login error:', err);
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     return (
         <div className={styles['page-wrapper']}>
@@ -118,8 +143,12 @@ const Login = () => {
 
                         <div className={styles.divider}></div>
                         <p className={styles['footer-text']}>
-                            DON'T HAVE AN ACCOUNT? <a href="">CREATE ONE NOW</a>
-                        </p>
+    DON'T HAVE AN ACCOUNT? 
+    <a href="/register" onClick={(e) => {
+        e.preventDefault();
+        navigate('/register');
+    }}>CREATE ONE NOW</a>
+</p>
                     </div>
                 </div>
             </div>

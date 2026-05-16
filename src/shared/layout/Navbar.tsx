@@ -1,8 +1,18 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import { FiMoon, FiSun, FiUser, FiChevronDown, FiHeart, FiLogOut } from "react-icons/fi";
 import "./Navbar.css";
+import logo from "../../assets/Logo (1).svg";
 
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+}
 
 export default function Navbar() {
   const location = useLocation();
@@ -13,6 +23,38 @@ export default function Navbar() {
   const [allRecipes, setAllRecipes] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  
+  // Auth states
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    const token = localStorage.getItem('accessToken');
+    if (userData && token) {
+      try {
+        const parsedUser = JSON.parse(userData) as User;
+        setIsAuthenticated(true);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // جيبي كل الوصفات مرة واحدة
   useEffect(() => {
@@ -44,15 +86,29 @@ export default function Navbar() {
     setSearchResults([]);
   };
 
-const toggleDarkMode = () => {
-  if (document.body.classList.contains("dark")) {
-    document.body.classList.remove("dark");
-    setDarkMode(false);
-  } else {
-    document.body.classList.add("dark");
-    setDarkMode(true);
-  }
-};
+  const toggleDarkMode = () => {
+    if (document.body.classList.contains("dark")) {
+      document.body.classList.remove("dark");
+      localStorage.setItem("darkMode", "false");
+      setDarkMode(false);
+    } else {
+      document.body.classList.add("dark");
+      localStorage.setItem("darkMode", "true");
+      setDarkMode(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('favorites');
+    localStorage.removeItem('recentRecipes');
+    setIsAuthenticated(false);
+    setUser(null);
+    navigate('/login');
+  };
+
   const links = [
     { name: "HOME", path: "/" },
     { name: "RECIPES", path: "/recipes" },
@@ -90,9 +146,9 @@ const toggleDarkMode = () => {
           {/* LEFT: Logo */}
           <div className="navbar-left">
             <div className="logo-icon">
-              <div className="logo-circle-outer"></div>
-              <div className="logo-circle-mid"></div>
-              <div className="logo-circle-inner"></div>
+              <Link to="/">
+                <img src={logo} alt="logo" />
+              </Link>
             </div>
             <span className="logo-text">
               Cooks
@@ -132,11 +188,14 @@ const toggleDarkMode = () => {
             })}
           </div>
 
-          {/* RIGHT: Search */}
+          {/* RIGHT: Search + Dark Mode + Hamburger (بدون زر Login) */}
           <div className="navbar-right">
+            {/* Dark Mode Button */}
             <button type="button" className="dark-btn" onClick={toggleDarkMode}>
               {darkMode ? <FiSun /> : <FiMoon />}
             </button>
+
+            {/* Search Box */}
             <div className="search-box">
               <button
                 className="search-icon-btn"
@@ -167,17 +226,84 @@ const toggleDarkMode = () => {
                 className="search-input"
               />
             </div>
+
+            {/* Mobile Search Icon */}
+            <button 
+              className="mobile-search-icon" 
+              onClick={() => setShowOverlay(true)}
+              aria-label="Search"
+            >
+              <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
+                <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" strokeWidth="2"/>
+                <path d="M12 12L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+
+            {/* Avatar for Desktop only - بدون زر Login */}
+            {isAuthenticated && (
+              <div className="navbar-profile desktop-only" ref={dropdownRef}>
+                <button
+                  type="button"
+                  className="navbar-profile-trigger"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  aria-haspopup="true"
+                  aria-expanded={isDropdownOpen}
+                  aria-label="Open profile menu"
+                >
+                  <img
+                    src={user?.image || 'https://via.placeholder.com/32'}
+                    alt="avatar"
+                    className="navbar-avatar"
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      img.style.display = "none";
+                      const fallback = img.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.style.display = "flex";
+                    }}
+                  />
+                  <div className="navbar-avatar-fallback" style={{ display: "none" }}>
+                    {user?.username?.slice(0, 2).toUpperCase() || 'U'}
+                  </div>
+                  <FiChevronDown className={`navbar-profile-chevron ${isDropdownOpen ? "open" : ""}`} />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="navbar-dropdown" role="menu">
+                    <Link
+                      to="/profile"
+                      className="navbar-dropdown-item"
+                      role="menuitem"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FiUser /> My Profile
+                    </Link>
+                    {/* <Link
+                      to="/profile"
+                      className="navbar-dropdown-item"
+                      role="menuitem"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FiHeart /> Favorites
+                    </Link> */}
+                    <button
+                      type="button"
+                      className="navbar-dropdown-item danger"
+                      role="menuitem"
+                      onClick={handleLogout}
+                    >
+                      <FiLogOut /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Hamburger Menu Icon */}
             <div className="menu-icon" onClick={() => setMenuOpen(true)}>
               <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                <rect width="22" height="2.5" rx="1.25" fill="#262522" />
-                <rect
-                  y="6.5"
-                  width="22"
-                  height="2.5"
-                  rx="1.25"
-                  fill="#262522"
-                />
-                <rect y="13" width="22" height="2.5" rx="1.25" fill="#262522" />
+                <rect width="22" height="2.5" rx="1.25" fill="currentColor" />
+                <rect y="6.5" width="22" height="2.5" rx="1.25" fill="currentColor" />
+                <rect y="13" width="22" height="2.5" rx="1.25" fill="currentColor" />
               </svg>
             </div>
           </div>
@@ -191,7 +317,6 @@ const toggleDarkMode = () => {
             className="search-overlay-content"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="search-overlay-header">
               <h2 className="search-overlay-title">
                 DISPLAYING RESULTS FOR:{" "}
@@ -207,7 +332,6 @@ const toggleDarkMode = () => {
               </button>
             </div>
 
-            {/* Results Grid */}
             {searchResults.length === 0 ? (
               <p style={{ color: "#666", fontFamily: "'Roboto', sans-serif" }}>
                 No recipes found for "{searchInput}"
@@ -249,9 +373,9 @@ const toggleDarkMode = () => {
             <div className="drawer-header">
               <div className="drawer-logo-row">
                 <div className="logo-icon logo-icon-sm">
-                  <div className="logo-circle-outer"></div>
-                  <div className="logo-circle-mid"></div>
-                  <div className="logo-circle-inner"></div>
+                  <Link to="/">
+                    <img src={logo} alt="logo" />
+                  </Link>
                 </div>
                 <span className="drawer-logo-text">
                   Cooks
@@ -282,6 +406,7 @@ const toggleDarkMode = () => {
                 </svg>
               </button>
             </div>
+            
             <div className="drawer-links">
               {links.map((link) => {
                 if (link.name === "RECIPES") {
@@ -316,17 +441,41 @@ const toggleDarkMode = () => {
                 );
               })}
             </div>
+            
             <div className="drawer-footer">
-              <button
-                className="drawer-signup-btn"
-                onClick={() => {
-                  navigate("/login");
-                  setMenuOpen(false);
-                }}
-              >
-                SIGN UP NOW!
-              </button>
+              {isAuthenticated && user ? (
+                <>
+                  <div className="drawer-user-info">
+                    <img 
+                      src={user.image || 'https://via.placeholder.com/40'} 
+                      alt={user.username} 
+                      className="drawer-avatar" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    <span>{user.firstName} {user.lastName}</span>
+                  </div>
+                  <Link to="/profile" className="drawer-signup-btn" onClick={() => setMenuOpen(false)}>
+                    Profile
+                  </Link>
+                  <button className="drawer-logout-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="drawer-signup-btn"
+                  onClick={() => {
+                    navigate("/login");
+                    setMenuOpen(false);
+                  }}
+                >
+                  SIGN UP NOW!
+                </button>
+              )}
             </div>
+            
             <div className="drawer-socials">
               <a href="#" className="social-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import "./Footer.css";
-import logo from "../assets/Logo Footer.png";  
+import logo from "../assets/Logo.svg";
 import { FaTiktok, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';  
 
@@ -26,11 +26,17 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-top">
-        <div className="footer-logo">
+         <div className="footer__brand">
+            <div className="footer__logo-icon">
           <Link to="/">
             <img src={logo} alt="logo" />
           </Link>
-        </div>
+            </div>
+            <div className="footer__brand-text">
+              <span className="footer__brand-name">Cooks</span>
+              <span className="footer__brand-sub">Delight</span>
+            </div>
+          </div>
 
         <ul className="footer-links">
           <li>
@@ -48,16 +54,32 @@ function Footer() {
         </ul>
 
         <div className="footer-social">
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a
+              href="https://www.tiktok.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
             <FaTiktok />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
             <FaFacebookF />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
             <FaInstagram />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a
+              href="https://www.youtube.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
             <FaYoutube />
           </a>
         </div>

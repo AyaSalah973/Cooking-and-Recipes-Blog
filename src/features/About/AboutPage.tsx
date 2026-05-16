@@ -10,7 +10,7 @@ export const AboutPage: React.FC = () => {
   const aboutData = homeService.getAboutData();
 
   return (
-    <main className="mt-10 px-4 max-w-6xl mx-auto">
+    <main className="main-content">
       <HeroSection title={aboutData.heroTitle} />
       <AboutSection content={aboutData.aboutContent} chefName={aboutData.signatureChef} />
       <FeaturedRecipes recipes={recipes} loading={loading} error={error} />
