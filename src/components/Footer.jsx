@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import "./Footer.css";
-import logo from "../assets/logo.svg";  
+import logo from "../assets/Logo.svg";
 import { FaTiktok, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';  
 
