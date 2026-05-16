@@ -335,26 +335,6 @@ body {
   background: #fee2e2;
 }
 
-.navbar-login-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #F29C33;
-  border-radius: 30px;
-  color: white;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.navbar-login-btn:hover {
-  background: #e08a1f;
-  transform: translateY(-2px);
-}
-
 /* ========================= */
 /* MOBILE DRAWER             */
 /* ========================= */
@@ -508,7 +488,6 @@ body {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-
 }
 
 .drawer-signup-btn:hover {
@@ -620,19 +599,6 @@ body {
   .navbar-avatar {
     width: 32px;
     height: 32px;
-  }
-  
-  .navbar-login-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-  
-  .navbar-login-btn span {
-    display: none;
-  }
-  
-  .navbar-login-btn svg {
-    margin: 0;
   }
   
   .navbar-right {
@@ -885,6 +851,84 @@ body {
 }
 
 /* ========================= */
+/* LANGUAGE SWITCH           */
+/* ========================= */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  background: rgba(38, 37, 34, 0.06);
+  border: 1px solid rgba(38, 37, 34, 0.08);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.lang-switch button {
+  border: none;
+  background: transparent;
+  color: #262522;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.25s ease;
+}
+
+.lang-switch button:hover {
+  background: rgba(38, 37, 34, 0.08);
+}
+
+.lang-switch .active-lang {
+  background: #262522;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* ========================= */
+/* HIDE GOOGLE BANNER        */
+/* ========================= */
+#google_translate_element {
+  display: none;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+iframe.skiptranslate {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+/* ========================= */
+/* HIDE LOGIN BUTTON         */
+/* ========================= */
+.navbar-login-btn {
+  display: none !important;
+}
+
+/* ========================= */
+/* HIDE DROPDOWN ON MOBILE   */
+/* ========================= */
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* ========================= */
 /* DARK MODE                 */
 /* ========================= */
 body.dark {
@@ -930,18 +974,6 @@ body.dark .mobile-search-icon svg {
   color: white;
 }
 
-.drawer-signup-btn {
-  flex: 1;
-  height: 40px;
-  background: rgba(240, 235, 225, 0.12);
-  border: 1px solid rgba(240, 235, 225, 0.25);
-  border-radius: 20px;
-  color: #f0ebe1;
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  cursor: pointer;
 body.dark .navbar-profile-trigger:hover {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -959,40 +991,6 @@ body.dark .navbar-dropdown-item:hover {
   background: #3a3a3a;
 }
 
-/* ========================= */
-/* RESPONSIVE               */
-/* ========================= */
-@media (max-width: 768px) {
-  .navbar-wrapper {
-    padding: 0 16px;
-  }
-
-  .navbar-links {
-    display: none;
-  }
-
-  .menu-icon {
-    display: block;
-  }
-
-  .logo-text {
-    font-size: 13px;
-  }
-}
-
-.dark-btn {
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(38, 37, 34, 0.08);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  color: #262522;
 body.dark .navbar-dropdown-item.danger {
   border-top-color: #444;
 }
@@ -1010,9 +1008,6 @@ body.dark .search-result-card {
   border-color: #444;
 }
 
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.08),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
 body.dark .search-result-name {
   color: white;
 }
@@ -1025,92 +1020,4 @@ body.dark .search-result-btn {
 body.dark .search-result-btn:hover {
   background: #F29C33;
   color: #1f1f1f;
-}
-/* ========================= */
-/* HIDE DROPDOWN ON MOBILE   */
-/* ========================= */
-.desktop-only {
-  display: block;
-}
-
-@media (max-width: 768px) {
-  .desktop-only {
-    display: none !important;
-  }
-}
-
-  box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
-}
-
-.lang-switch {
-  display: flex;
-  align-items: center;
-
-  background: rgba(38, 37, 34, 0.06);
-
-  border: 1px solid rgba(38, 37, 34, 0.08);
-
-  border-radius: 999px;
-
-  padding: 4px;
-
-  gap: 4px;
-}
-
-.lang-switch button {
-  border: none;
-
-  background: transparent;
-
-  color: #262522;
-
-  padding: 8px 14px;
-
-  border-radius: 999px;
-
-  cursor: pointer;
-
-  font-size: 12px;
-
-  font-weight: 700;
-
-  transition: 0.25s ease;
-}
-
-.lang-switch button:hover {
-  background: rgba(38, 37, 34, 0.08);
-}
-
-.lang-switch .active-lang {
-  background: #262522;
-
-  color: white;
-
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
-}
-#google_translate_element {
-  display: none;
-}
-
-/* hide google banner */
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-iframe.skiptranslate {
-  display: none !important;
-}
-
-.skiptranslate {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-/* التأكد من عدم ظهور أي زر Login في navbar */
-.navbar-login-btn {
-  display: none !important;
 }
