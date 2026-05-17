@@ -1,6 +1,6 @@
 // src/features/profile/Profile.jsx
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Profile.module.css';
 import { 
   User, Mail, Heart, Clock, LogOut, 
@@ -12,14 +12,18 @@ import SmartCookingModeTab from './SmartCookingModeTab';
 
 const Profile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  // Get activeTab from location state, default to 'profile'
+  const [activeTab, setActiveTab] = useState(() => {
+    return location.state?.activeTab || 'profile';
+  });
+  
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('profile');
   const [favorites, setFavorites] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [recentRecipesData, setRecentRecipesData] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [availableIngredients, setAvailableIngredients] = useState('');
-  // ✅ إزالة smartMode نهائياً
   const [smartSuggestions, setSmartSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [allRecipes, setAllRecipes] = useState([]);
@@ -32,7 +36,13 @@ const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [recipeToDelete, setRecipeToDelete] = useState(null);
 
-  // ✅ تعريف fetchAllRecipes أولاً
+  // Update activeTab when location state changes
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
+
   const fetchAllRecipes = async () => {
     try {
       const response = await fetch('https://dummyjson.com/recipes?limit=100');
@@ -57,7 +67,6 @@ const Profile = () => {
     }
   };
 
-  // ✅ تجميع عمليات setState في useEffect واحد
   useEffect(() => {
     const initProfile = async () => {
       const userData = localStorage.getItem('user');
@@ -79,7 +88,6 @@ const Profile = () => {
     navigate('/login');
   };
 
-  // ✅ إصلاح حساب finalScore
   const handleIngredientSearch = async () => {
     if (!availableIngredients.trim()) return;
     
@@ -112,7 +120,6 @@ const Profile = () => {
       const userMatchPercentage = (foundCount / userIngredients.length) * 100;
       const recipeMatchPercentage = (foundCount / recipeIngredients.length) * 100;
       
-      // ✅ حساب finalScore مباشرة مع الاستخدام
       let finalScore;
       
       if (userMatchPercentage >= 100) {
@@ -303,44 +310,9 @@ const Profile = () => {
 
   return (
     <div className={styles['profile-page']}>
-      <div className={styles.container}>
-        
-        {/* Sidebar */}
-        <aside className={styles.sidebar}>
-          <div className={styles['user-avatar']}>
-            <img src={user.image || 'https://via.placeholder.com/120'} alt={user.username} />
-            <h3>{user.firstName} {user.lastName}</h3>
-            <p>@{user.username}</p>
-          </div>
-          
-          <nav className={styles['sidebar-nav']}>
-            <button className={activeTab === 'profile' ? styles.active : ''} onClick={() => setActiveTab('profile')}>
-              <User size={18} /> My Profile
-            </button>
-            <button className={activeTab === 'cook' ? styles.active : ''} onClick={() => setActiveTab('cook')}>
-              <ChefHat size={18} /> Cook from Ingredients
-            </button>
-            <button className={activeTab === 'smart' ? styles.active : ''} onClick={() => setActiveTab('smart')}>
-              <Sparkles size={18} /> Smart Cooking Mode
-            </button>
-            <button className={activeTab === 'recommendations' ? styles.active : ''} onClick={() => setActiveTab('recommendations')}>
-              <TrendingUp size={18} /> Recommendations
-            </button>
-            <button className={activeTab === 'favorites' ? styles.active : ''} onClick={() => setActiveTab('favorites')}>
-              <Heart size={18} /> Favorites ({favoriteRecipes.length})
-            </button>
-            <button className={activeTab === 'recent' ? styles.active : ''} onClick={() => setActiveTab('recent')}>
-              <Clock size={18} /> Recent ({recentRecipesData.length})
-            </button>
-          </nav>
-          
-          <button className={styles['logout-btn']} onClick={handleLogout}>
-            <LogOut size={18} /> Sign Out
-          </button>
-        </aside>
-
-        {/* Main Content */}
-        <main className={styles['main-content']}>
+      <div className={styles['profile-container']}>
+        {/* Main Content - Full Width, No Sidebar */}
+        <main className={styles['profile-main-content']}>
           
           {/* My Profile Tab */}
           {activeTab === 'profile' && (
@@ -500,7 +472,7 @@ Example: chicken, tomato, onion, garlic, rice"
             <div className={styles.tab}>
               <div className={styles['tab-header']}>
                 <div>
-                  <h1> Your Favorite Recipes</h1>
+                  <h1>❤️ Your Favorite Recipes</h1>
                   <p className={styles.tabDesc}>{favoriteRecipes.length} recipes saved to your collection</p>
                 </div>
                 {favoriteRecipes.length > 0 && (
@@ -547,7 +519,7 @@ Example: chicken, tomato, onion, garlic, rice"
             <div className={styles.tab}>
               <div className={styles['tab-header']}>
                 <div>
-                  <h1>Recently Viewed</h1>
+                  <h1>🕐 Recently Viewed</h1>
                   <p className={styles.tabDesc}>{recentRecipesData.length} recipes in your history</p>
                 </div>
                 {recentRecipesData.length > 0 && (

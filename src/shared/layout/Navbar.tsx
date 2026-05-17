@@ -1,6 +1,8 @@
+// src/components/Navbar.tsx
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { FiMoon, FiSun, FiUser, FiChevronDown, FiHeart, FiLogOut } from "react-icons/fi";
+import { FiMoon, FiSun, FiUser, FiChevronDown, FiHeart, FiLogOut, FiClock, FiChevronRight, FiCompass, FiTrendingUp, FiZap, FiUserCheck, FiGlobe } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import "./Navbar.css";
 import logo from "../../assets/Logo (1).svg";
@@ -31,12 +33,13 @@ export default function Navbar() {
   const [allRecipes, setAllRecipes] = useState([]);
   const [showOverlay, setShowOverlay] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   // Auth states
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const profileDropdownRef = useRef<HTMLDivElement | null>(null);
 
   // Check authentication on mount
   useEffect(() => {
@@ -56,15 +59,31 @@ export default function Navbar() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
+        setLangDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close dropdown on route change
+  useEffect(() => {
+    setProfileDropdownOpen(false);
+    setLangDropdownOpen(false);
+  }, [location.pathname]);
+
   const { t, i18n } = useTranslation();
+
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    if (savedDarkMode) {
+      document.body.classList.add("dark");
+      setDarkMode(true);
+    }
+  }, []);
 
   /* FETCH RECIPES */
   useEffect(() => {
@@ -102,9 +121,14 @@ export default function Navbar() {
     const value = e.target.value;
     setSearchInput(value);
     if (value.trim()) {
-      navigate(`/recipes?search=${encodeURIComponent(value)}`);
+      const filtered = allRecipes.filter((recipe: any) =>
+        recipe.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSearchResults(filtered);
+      setShowOverlay(true);
     } else {
-      navigate("/recipes");
+      setSearchResults([]);
+      setShowOverlay(false);
     }
   };
 
@@ -131,17 +155,33 @@ export default function Navbar() {
       localStorage.setItem("darkMode", "true");
       setDarkMode(true);
     }
+    setProfileDropdownOpen(false);
+  };
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    if (lang === "en") {
+      document.cookie = "googtrans=/ar/en";
+    } else {
+      document.cookie = "googtrans=/en/ar";
+    }
+    window.location.reload();
+    setProfileDropdownOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('favorites');
-    localStorage.removeItem('recentRecipes');
     setIsAuthenticated(false);
     setUser(null);
     navigate('/login');
+    setProfileDropdownOpen(false);
+  };
+
+  const handleProfileNavigation = (tab: string) => {
+    navigate('/profile', { state: { activeTab: tab } });
+    setProfileDropdownOpen(false);
   };
 
   const links = [
@@ -172,6 +212,16 @@ export default function Navbar() {
     if (path === "/about") return location.pathname === "/about";
     return false;
   };
+
+  // Profile navigation items for dropdown (including Dark Mode and Language)
+  const profileNavItems = [
+    { id: 'profile', name: 'My Profile', icon: <FiUserCheck size={18} /> },
+    { id: 'cook', name: 'Cook from Ingredients', icon: <FiCompass size={18} /> },
+    { id: 'smart', name: 'Smart Cooking Mode', icon: <FiZap size={18} /> },
+    { id: 'recommendations', name: 'Recommendations', icon: <FiTrendingUp size={18} /> },
+    { id: 'favorites', name: 'Favorites', icon: <FiHeart size={18} /> },
+    { id: 'recent', name: 'Recent', icon: <FiClock size={18} /> },
+  ];
 
   return (
     <>
@@ -218,37 +268,8 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* RIGHT */}
+          {/* RIGHT - تم إزالة Dark Mode و Language Switch من هنا */}
           <div className="navbar-right">
-            {/* DARK MODE */}
-            <button type="button" className="dark-btn" onClick={toggleDarkMode}>
-              {darkMode ? <FiSun /> : <FiMoon />}
-            </button>
-
-            {/* LANGUAGE */}
-            <div className="lang-switch">
-              <button
-                className={i18n.language === "en" ? "active-lang" : ""}
-                onClick={() => {
-                  i18n.changeLanguage("en");
-                  document.cookie = "googtrans=/ar/en";
-                  window.location.reload();
-                }}
-              >
-                EN
-              </button>
-              <button
-                className={i18n.language === "ar" ? "active-lang" : ""}
-                onClick={() => {
-                  i18n.changeLanguage("ar");
-                  document.cookie = "googtrans=/en/ar";
-                  window.location.reload();
-                }}
-              >
-                عربي
-              </button>
-            </div>
-
             {/* SEARCH BOX */}
             <div className="search-box">
               <button className="search-icon-btn" title="Search" aria-label="Search">
@@ -274,15 +295,15 @@ export default function Navbar() {
               </svg>
             </button>
 
-            {/* Avatar for Desktop only */}
+            {/* Profile Dropdown - يحتوي على كل شيء: Profile Options + Dark Mode + Language + Logout */}
             {isAuthenticated && (
-              <div className="navbar-profile desktop-only" ref={dropdownRef}>
+              <div className="navbar-profile desktop-only" ref={profileDropdownRef}>
                 <button
                   type="button"
                   className="navbar-profile-trigger"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   aria-haspopup="true"
-                  aria-expanded={isDropdownOpen}
+                  aria-expanded={profileDropdownOpen}
                   aria-label="Open profile menu"
                 >
                   <img
@@ -299,20 +320,86 @@ export default function Navbar() {
                   <div className="navbar-avatar-fallback" style={{ display: "none" }}>
                     {user?.username?.slice(0, 2).toUpperCase() || 'U'}
                   </div>
-                  <FiChevronDown className={`navbar-profile-chevron ${isDropdownOpen ? "open" : ""}`} />
+                  <FiChevronDown className={`navbar-profile-chevron ${profileDropdownOpen ? "open" : ""}`} />
                 </button>
 
-                {isDropdownOpen && (
-                  <div className="navbar-dropdown" role="menu">
-                    <Link to="/profile" className="navbar-dropdown-item" onClick={() => setIsDropdownOpen(false)}>
-                      <FiUser /> My Profile
-                    </Link>
-                    <button type="button" className="navbar-dropdown-item danger" onClick={handleLogout}>
-                      <FiLogOut /> Logout
+                {profileDropdownOpen && (
+                  <div className="navbar-profile-dropdown" role="menu">
+                    {/* User Info Header */}
+                    <div className="profile-dropdown-header">
+                      <img src={user?.image || 'https://via.placeholder.com/48'} alt={user?.username} className="dropdown-avatar" />
+                      <div className="dropdown-user-info">
+                        <span className="dropdown-user-name">{user?.firstName} {user?.lastName}</span>
+                        <span className="dropdown-user-email">{user?.email}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="profile-dropdown-divider" />
+                    
+                    {/* Profile Navigation Items */}
+                    {profileNavItems.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className="profile-dropdown-item"
+                        onClick={() => handleProfileNavigation(item.id)}
+                      >
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </button>
+                    ))}
+                    
+                    <div className="profile-dropdown-divider" />
+                    
+                    {/* Dark Mode Toggle - موجود هنا الآن */}
+                    <button 
+                      type="button" 
+                      className="profile-dropdown-item"
+                      onClick={toggleDarkMode}
+                    >
+                      {darkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                      <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                    </button>
+                    
+                    {/* Language Selection - موجود هنا الآن */}
+                    <div className="profile-dropdown-language">
+                      <div className="profile-dropdown-item language-label">
+                        <FiGlobe size={18} />
+                        <span>Language</span>
+                      </div>
+                      <div className="language-options">
+                        <button
+                          className={`lang-option ${i18n.language === "en" ? "active" : ""}`}
+                          onClick={() => handleLanguageChange("en")}
+                        >
+                          English
+                        </button>
+                        <button
+                          className={`lang-option ${i18n.language === "ar" ? "active" : ""}`}
+                          onClick={() => handleLanguageChange("ar")}
+                        >
+                          العربية
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="profile-dropdown-divider" />
+                    
+                    {/* Logout Button */}
+                    <button type="button" className="profile-dropdown-item logout" onClick={handleLogout}>
+                      <FiLogOut size={18} />
+                      <span>Sign Out</span>
                     </button>
                   </div>
                 )}
               </div>
+            )}
+            
+            {/* If not authenticated, show login button */}
+            {!isAuthenticated && (
+              <button className="navbar-login-btn" onClick={() => navigate('/login')}>
+                Sign In
+              </button>
             )}
 
             {/* Hamburger Menu Icon */}
@@ -387,7 +474,7 @@ export default function Navbar() {
 
             <div className="drawer-links">
               {links.map((link) => {
-                if (link.name === "RECIPES") {
+                if (link.name === "RECIPES" || link.name === "الوصفات") {
                   return (
                     <a key={link.path} href="#" onClick={handleRecipesClick} className={isActiveLink(link.path) ? "drawer-link active" : "drawer-link"}>
                       {link.name}
@@ -402,22 +489,80 @@ export default function Navbar() {
               })}
             </div>
 
-            <div className="drawer-footer">
-              {isAuthenticated && user ? (
-                <>
-                  <div className="drawer-user-info">
-                    <img src={user.image || 'https://via.placeholder.com/40'} alt={user.username} className="drawer-avatar" />
-                    <span>{user.firstName} {user.lastName}</span>
+            {/* Profile section in mobile drawer */}
+            {isAuthenticated && user && (
+              <div className="drawer-profile-section">
+                <div className="drawer-user-info">
+                  <img src={user.image || 'https://via.placeholder.com/40'} alt={user.username} className="drawer-avatar" />
+                  <div>
+                    <span className="drawer-user-name">{user.firstName} {user.lastName}</span>
+                    <span className="drawer-user-email">{user.email}</span>
                   </div>
-                  <Link to="/profile" className="drawer-signup-btn" onClick={() => setMenuOpen(false)}>Profile</Link>
-                  <button className="drawer-logout-btn" onClick={handleLogout}>Logout</button>
-                </>
-              ) : (
-                <button className="drawer-signup-btn" onClick={() => { navigate("/login"); setMenuOpen(false); }}>
-                  SIGN UP NOW!
+                </div>
+                
+                {/* Profile Links */}
+                <div className="drawer-profile-links">
+                  {profileNavItems.map((item) => (
+                    <button
+                      key={item.id}
+                      className="drawer-profile-link"
+                      onClick={() => {
+                        handleProfileNavigation(item.id);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      {item.icon}
+                      <span>{item.name}</span>
+                      <FiChevronRight size={16} />
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Dark Mode in Mobile Drawer */}
+                <button className="drawer-dark-mode-btn" onClick={toggleDarkMode}>
+                  {darkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                  <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
                 </button>
-              )}
-            </div>
+                
+                {/* Language in Mobile Drawer */}
+                <div className="drawer-language-section">
+                  <div className="drawer-language-label">
+                    <FiGlobe size={18} />
+                    <span>Language</span>
+                  </div>
+                  <div className="drawer-language-options">
+                    <button
+                      className={i18n.language === "en" ? "active" : ""}
+                      onClick={() => {
+                        handleLanguageChange("en");
+                        setMenuOpen(false);
+                      }}
+                    >
+                      English
+                    </button>
+                    <button
+                      className={i18n.language === "ar" ? "active" : ""}
+                      onClick={() => {
+                        handleLanguageChange("ar");
+                        setMenuOpen(false);
+                      }}
+                    >
+                      العربية
+                    </button>
+                  </div>
+                </div>
+                
+                <button className="drawer-logout-btn" onClick={handleLogout}>
+                  <FiLogOut size={18} /> Logout
+                </button>
+              </div>
+            )}
+
+            {!isAuthenticated && (
+              <button className="drawer-signup-btn" onClick={() => { navigate("/login"); setMenuOpen(false); }}>
+                SIGN UP NOW!
+              </button>
+            )}
 
             <div className="drawer-socials">
               <a href="#" className="social-icon">
