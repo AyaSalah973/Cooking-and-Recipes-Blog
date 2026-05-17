@@ -38,7 +38,7 @@ function SimilarRecipes() {
       <div className="recipes-grid">
         {recipes.slice(start, start + 2).map((item) => (
           <div className="recipe-box" key={item.id}>
-            <img src={item.image} alt={item.name} />
+            <img src={item.image} alt={item.name} className="recipe-main-img" />
             {item.tags?.some((tag) =>
               [
                 "vegan",
@@ -51,9 +51,12 @@ function SimilarRecipes() {
             ) && <img src={badge} alt="badge" className="recipe-badge" />}
 
             <div className="recipe-content">
-              <h3>{item.name}</h3>
+              <h3>{(item.name || "").split(" ").slice(0, 3).join(" ")}</h3>
 
-              <p>{item.instructions[0]}</p>
+              <p>
+                {(item.instructions[0] || "").split(" ").slice(0, 10).join(" ")}
+                ...
+              </p>
 
               <div className="recipe-footer">
                 <span>
