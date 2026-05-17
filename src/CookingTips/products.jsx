@@ -6,7 +6,6 @@ import { Heart } from "lucide-react"; // أضفنا أيقونة القلب
 function Products() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
   const [newestIndex, setNewestIndex] = useState(0);
   const [basicsIndex, setBasicsIndex] = useState(0);
@@ -16,11 +15,12 @@ function Products() {
   const [tipsIndex, setTipsIndex] = useState(0);
 
   // تحميل الوصفات والمفضلة
-  useEffect(() => {
-    // تحميل المفضلة من localStorage
-    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    setFavorites(savedFavorites);
+  const [favorites, setFavorites] = useState(() => {
+    return JSON.parse(localStorage.getItem("favorites") || "[]");
+  });
 
+  // تحميل الوصفات
+  useEffect(() => {
     // تحميل الوصفات
     fetch("https://dummyjson.com/recipes?limit=0")
       .then((res) => res.json())
@@ -32,16 +32,16 @@ function Products() {
 
   // حفظ المفضلة في localStorage عند تغييرها
   useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
+    localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
   // دالة تبديل المفضلة
   const toggleFavorite = (recipeId, e) => {
     e.stopPropagation(); // لمنع الانتقال إلى صفحة الوصفة عند الضغط على القلب
-    
-    setFavorites(prev => {
+
+    setFavorites((prev) => {
       if (prev.includes(recipeId)) {
-        return prev.filter(id => id !== recipeId);
+        return prev.filter((id) => id !== recipeId);
       } else {
         return [...prev, recipeId];
       }
@@ -103,66 +103,118 @@ function Products() {
       setNourishIndex(0);
     }
   };
+  const prevNourish = () => {
+    if (nourishIndex > 0) {
+      setNourishIndex(nourishIndex - 1);
+    } else {
+      setNourishIndex(recipes.length - 2);
+    }
+  };
 
+  /* TIPS */
+
+  const nextTips = () => {
+    if (tipsIndex + 3 < recipes.length) {
+      setTipsIndex(tipsIndex + 1);
+    } else {
+      setTipsIndex(0);
+    }
+  };
+
+  const prevTips = () => {
+    if (tipsIndex > 0) {
+      setTipsIndex(tipsIndex - 1);
+    } else {
+      setTipsIndex(recipes.length - 3);
+    }
+  };
   // مكون بطاقة الوصفة الموحد مع زر المفضلة
-  const RecipeCardWithFavorite = ({ recipe, variant = 'newest' }) => {
+  const RecipeCardWithFavorite = ({ recipe, variant = "newest" }) => {
     const getCardStyles = () => {
-      switch(variant) {
-        case 'newest': return styles['newest-card'];
-        case 'basic': return styles['basic-card'];
-        case 'nourish': return styles['nourish-card'];
-        case 'tip': return styles['tip-card'];
-        default: return styles['newest-card'];
+      switch (variant) {
+        case "newest":
+          return styles["newest-card"];
+        case "basic":
+          return styles["basic-card"];
+        case "nourish":
+          return styles["nourish-card"];
+        case "tip":
+          return styles["tip-card"];
+        default:
+          return styles["newest-card"];
       }
     };
 
     const getImageWrapperStyles = () => {
-      switch(variant) {
-        case 'newest': return styles['newest-img-wrap'];
-        case 'basic': return styles['basic-img-wrap'];
-        case 'nourish': return styles['nourish-img-wrap'];
-        case 'tip': return styles['tip-img-wrap'];
-        default: return styles['newest-img-wrap'];
+      switch (variant) {
+        case "newest":
+          return styles["newest-img-wrap"];
+        case "basic":
+          return styles["basic-img-wrap"];
+        case "nourish":
+          return styles["nourish-img-wrap"];
+        case "tip":
+          return styles["tip-img-wrap"];
+        default:
+          return styles["newest-img-wrap"];
       }
     };
 
     return (
-      <div className={getCardStyles()} key={recipe.id}
-        onClick={() => handleRecipeClick(recipe.id)} style={{ cursor: 'pointer' }}>
-        <div className={getImageWrapperStyles()} style={{ position: 'relative' }}>
+      <div
+        className={getCardStyles()}
+        key={recipe.id}
+        onClick={() => handleRecipeClick(recipe.id)}
+        style={{ cursor: "pointer" }}
+      >
+        <div
+          className={getImageWrapperStyles()}
+          style={{ position: "relative" }}
+        >
           <img src={recipe.image} alt={recipe.name} />
-          
+
           {/* زر القلب */}
-          <button 
-            className={styles['favorite-btn-products']}
+          <button
+            className={styles["favorite-btn-products"]}
             onClick={(e) => toggleFavorite(recipe.id, e)}
             aria-label="Add to favorites"
           >
-            <Heart 
-              size={18} 
+            <Heart
+              size={18}
               fill={isFavorite(recipe.id) ? "#EE6352" : "none"}
               color={isFavorite(recipe.id) ? "#EE6352" : "#999999"}
             />
           </button>
-          
+
           {/* الفيجان بادج للقسم الأول فقط */}
-          {variant === 'newest' && (
-            <span className={styles['vegan-badge']}>VEGAN<br />RECIPE</span>
+          {variant === "newest" && (
+            <span className={styles["vegan-badge"]}>
+              VEGAN
+              <br />
+              RECIPE
+            </span>
           )}
         </div>
-        <div className={styles[`${variant}-info`] || styles['newest-info']}>
+        <div className={styles[`${variant}-info`] || styles["newest-info"]}>
           <h3>{recipe.name}</h3>
-          <p className={variant === 'newest' ? styles['newest-desc'] : ''}>
+          <p className={variant === "newest" ? styles["newest-desc"] : ""}>
             {recipe.instructions?.[0] || "A delicious recipe you will love."}
           </p>
-          <div className={styles['card-footer']}>
+          <div className={styles["card-footer"]}>
             <span className={styles.meta}>
-              {recipe.cookTimeMinutes} MIN · {recipe.difficulty?.toUpperCase() || 'EASY'} PREP · {recipe.servings} SERVES
+              {recipe.cookTimeMinutes} MIN ·{" "}
+              {recipe.difficulty?.toUpperCase() || "EASY"} PREP ·{" "}
+              {recipe.servings} SERVES
             </span>
-            <button className={styles['view-btn']} onClick={(e) => {
-              e.stopPropagation();
-              handleRecipeClick(recipe.id);
-            }}>VIEW RECIPE</button>
+            <button
+              className={styles["view-btn"]}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRecipeClick(recipe.id);
+              }}
+            >
+              VIEW RECIPE
+            </button>
           </div>
         </div>
       </div>
@@ -231,9 +283,13 @@ function Products() {
             </button>
           </div>
         </div>
-        <div className={styles['newest-grid']}>
+        <div className={styles["newest-grid"]}>
           {newest.map((recipe) => (
-            <RecipeCardWithFavorite key={recipe.id} recipe={recipe} variant="newest" />
+            <RecipeCardWithFavorite
+              key={recipe.id}
+              recipe={recipe}
+              variant="newest"
+            />
           ))}
         </div>
       </div>
@@ -252,9 +308,13 @@ function Products() {
             </button>
           </div>
         </div>
-        <div className={styles['basics-grid']}>
+        <div className={styles["basics-grid"]}>
           {basics.map((recipe) => (
-            <RecipeCardWithFavorite key={recipe.id} recipe={recipe} variant="basic" />
+            <RecipeCardWithFavorite
+              key={recipe.id}
+              recipe={recipe}
+              variant="basic"
+            />
           ))}
         </div>
       </div>
@@ -273,9 +333,13 @@ function Products() {
             </button>
           </div>
         </div>
-        <div className={styles['nourish-grid']}>
+        <div className={styles["nourish-grid"]}>
           {nourishing.map((recipe) => (
-            <RecipeCardWithFavorite key={recipe.id} recipe={recipe} variant="nourish" />
+            <RecipeCardWithFavorite
+              key={recipe.id}
+              recipe={recipe}
+              variant="nourish"
+            />
           ))}
         </div>
       </div>
@@ -294,9 +358,13 @@ function Products() {
             </button>
           </div>
         </div>
-        <div className={styles['tips-grid']}>
+        <div className={styles["tips-grid"]}>
           {tips.map((recipe) => (
-            <RecipeCardWithFavorite key={recipe.id} recipe={recipe} variant="tip" />
+            <RecipeCardWithFavorite
+              key={recipe.id}
+              recipe={recipe}
+              variant="tip"
+            />
           ))}
         </div>
       </div>
