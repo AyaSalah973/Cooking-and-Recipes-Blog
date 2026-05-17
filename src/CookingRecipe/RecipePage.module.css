@@ -18,7 +18,10 @@ body {
 }
 .recipe-card {
   width: 100%;
-  max-width:none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: none;
   margin-top: 40px;
   padding: 24px;
   border-radius: 32px;
@@ -434,7 +437,7 @@ h1 {
 :global(body.dark) .desc,
 :global(body.dark) .steps p,
 :global(body.dark) .right-side small {
-  color: rgba(255,255,255,0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 :global(body.dark) .share-box {
