@@ -650,3 +650,61 @@
 :global(body.dark) .read-more-btn:hover {
   background: #2a2a2a;
 }
+
+/* ========================= */
+/* FAVORITE BUTTON STYLES    */
+/* ========================= */
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card-image-wrapper img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card-image-wrapper img:hover {
+  transform: scale(1.05);
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);  /* خلفية بيضاء شفافة */
+  border: 1px solid rgba(0, 0, 0, 0.1);   /* إطار خفيف */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* إزالة class favorite-active لأننا نعتمد على لون القلب نفسه */
+
+/* دعم الوضع المظلم */
+:global(body.dark) .favorite-btn {
+  background: rgba(38, 38, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:global(body.dark) .favorite-btn:hover {
+  background: #2a2a2a;
+}

@@ -3,13 +3,21 @@ import "./SimilarRecipes.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import badge from "../assets/icons/badge.svg";
+import { Heart } from "lucide-react"; // أضفنا أيقونة القلب
 
 function SimilarRecipes({ currentId }) {
   const [recipes, setRecipes] = useState([]);
   const [index, setIndex] = useState(0);
+  const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
+  // تحميل الوصفات والمفضلة من localStorage
   useEffect(() => {
+    // تحميل المفضلة أولاً
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setFavorites(savedFavorites);
+
+    // ثم تحميل الوصفات
     fetch("https://dummyjson.com/recipes")
       .then((res) => res.json())
       .then((data) => {
@@ -21,10 +29,31 @@ function SimilarRecipes({ currentId }) {
       });
   }, [currentId]);
 
+  // حفظ المفضلة في localStorage عند تغييرها
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
   const handleViewRecipe = (recipeId) => {
     navigate(`/recipe/${recipeId}`);
     window.scrollTo(0, 0);
   };
+
+  // دالة تبديل المفضلة
+  const toggleFavorite = (recipeId, e) => {
+    e.stopPropagation(); // لمنع الانتقال إلى صفحة الوصفة عند الضغط على القلب
+    
+    setFavorites(prev => {
+      if (prev.includes(recipeId)) {
+        return prev.filter(id => id !== recipeId);
+      } else {
+        return [...prev, recipeId];
+      }
+    });
+  };
+
+  // التحقق إذا كانت الوصفة مفضلة
+  const isFavorite = (recipeId) => favorites.includes(recipeId);
 
   const next = () => {
     if (index + 2 < recipes.length) {
@@ -61,6 +90,7 @@ function SimilarRecipes({ currentId }) {
                 src={item.image} 
                 alt={item.name} 
                 className="recipe-img-similar" 
+                onClick={() => handleViewRecipe(item.id)}
               />
               {/* Badge conditionally rendered for vegan/vegetarian tags */}
               {item.tags?.some((tag) =>
@@ -79,9 +109,22 @@ function SimilarRecipes({ currentId }) {
                   className="recipe-badge-similar" 
                 />
               )}
+              
+              {/* زر القلب الجديد */}
+              <button 
+                className={`favorite-btn-similar ${isFavorite(item.id) ? 'favorite-active-similar' : ''}`}
+                onClick={(e) => toggleFavorite(item.id, e)}
+                aria-label="Add to favorites"
+              >
+                <Heart 
+                  size={18} 
+                  fill={isFavorite(item.id) ? "#EE6352" : "none"}
+                  color={isFavorite(item.id) ? "#EE6352" : "#999999"}
+                />
+              </button>
             </div>
             <div className="card-content-similar">
-              <h3>{item.name}</h3>
+              <h3 onClick={() => handleViewRecipe(item.id)}>{item.name}</h3>
               <p>{item.instructions?.[0]?.slice(0, 80)}...</p>
               <div className="card-footer-similar">
                 <span>{item.prepTimeMinutes} MIN · {item.servings} SERVES</span>

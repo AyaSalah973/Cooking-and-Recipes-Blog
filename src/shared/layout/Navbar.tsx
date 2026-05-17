@@ -216,11 +216,7 @@ export default function Navbar() {
   // Profile navigation items for dropdown (including Dark Mode and Language)
   const profileNavItems = [
     { id: 'profile', name: 'My Profile', icon: <FiUserCheck size={18} /> },
-    { id: 'cook', name: 'Cook from Ingredients', icon: <FiCompass size={18} /> },
-    { id: 'smart', name: 'Smart Cooking Mode', icon: <FiZap size={18} /> },
-    { id: 'recommendations', name: 'Recommendations', icon: <FiTrendingUp size={18} /> },
-    { id: 'favorites', name: 'Favorites', icon: <FiHeart size={18} /> },
-    { id: 'recent', name: 'Recent', icon: <FiClock size={18} /> },
+    
   ];
 
   return (

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// FeaturedRecipes.tsx - النسخة الكاملة
+import React from 'react';
 import type { Recipe } from '../../../entities/Recipe';
 import styles from '../styles/FeaturedRecipes.module.css';
 
@@ -7,16 +7,20 @@ interface FeaturedRecipesProps {
   recipes: Recipe[];
   loading: boolean;
   error: string | null;
+  favorites: number[];
+  onToggleFavorite: (recipeId: number) => void;
+  onRecipeClick: (recipeId: number) => void;
 }
 
 export const FeaturedRecipes: React.FC<FeaturedRecipesProps> = ({
   recipes,
   loading,
   error,
+  favorites,
+  onToggleFavorite,
+  onRecipeClick,
 }) => {
-  const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
-
+  const [index, setIndex] = React.useState(0);
   const perPage = 2;
 
   const next = () => {
@@ -31,8 +35,13 @@ export const FeaturedRecipes: React.FC<FeaturedRecipesProps> = ({
     }
   };
 
-  const handleViewRecipe = (recipeId: number) => {
-    navigate(`/recipe/${recipeId}`);
+  const handleHeartClick = (e: React.MouseEvent, recipeId: number) => {
+    e.stopPropagation(); // منع انتشار الحدث للكارد
+    onToggleFavorite(recipeId);
+  };
+
+  const handleCardClick = (recipeId: number) => {
+    onRecipeClick(recipeId);
   };
 
   if (loading) {
@@ -52,53 +61,40 @@ export const FeaturedRecipes: React.FC<FeaturedRecipesProps> = ({
     );
   }
 
+  const displayedRecipes = recipes.slice(index, index + perPage);
+
+  if (displayedRecipes.length === 0) {
+    return null;
+  }
+
   return (
     <div className={styles.featured}>
-
-      {/* HEADER */}
       <div className={styles['featured-header']}>
-
         <h2>FEATURED RECIPES</h2>
-
         <div className={styles.arrows}>
-          <button
-            onClick={prev}
-            disabled={index === 0}
-          >
+          <button onClick={prev} disabled={index === 0}>
             {"<"}
           </button>
-
-          <button
-            onClick={next}
-            disabled={index + perPage >= recipes.length}
-          >
+          <button onClick={next} disabled={index + perPage >= recipes.length}>
             {">"}
           </button>
         </div>
-
       </div>
 
-      {/* GRID */}
       <div className={styles['featured-grid']}>
-
-        {recipes.slice(index, index + perPage).map((recipe) => (
-
+        {displayedRecipes.map((recipe) => (
           <div
             key={recipe.id}
             className={styles['recipe-card']}
+            onClick={() => handleCardClick(recipe.id)}
           >
-
-            {/* IMAGE */}
             <div className={styles['image-wrap']}>
-
-              <img
-                src={recipe.image}
-                alt={recipe.name}
-              />
-
-              {/* HEART */}
-              <button className={styles['heart-btn']}>
-
+              <img src={recipe.image} alt={recipe.name} />
+              
+              <button 
+                className={`${styles['heart-btn']} ${favorites.includes(recipe.id) ? styles.active : ''}`}
+                onClick={(e) => handleHeartClick(e, recipe.id)}
+              >
                 <svg
                   viewBox="0 0 24 24"
                   width="18"
@@ -107,52 +103,39 @@ export const FeaturedRecipes: React.FC<FeaturedRecipesProps> = ({
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  fill="none"
+                  fill={favorites.includes(recipe.id) ? "currentColor" : "none"}
                 >
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
-
               </button>
 
-              {/* RATING */}
               <div className={styles.rating}>
                 ⭐ {recipe.rating ?? 4.8}
               </div>
-
             </div>
 
-            {/* CONTENT */}
             <div className={styles['card-content']}>
-
               <h3>{recipe.name}</h3>
-
-              <p>
-                {recipe.instructions?.slice(0, 80)}...
-              </p>
-
+              <p>{recipe.instructions?.[0]?.slice(0, 80)}...</p>
+              
               <div className={styles['card-footer']}>
-
                 <span>
                   {recipe.prepTimeMinutes} MIN · {recipe.servings} SERVES
                 </span>
-
-                <button
+                <button 
                   className={styles['view-btn']}
-                  onClick={() => handleViewRecipe(recipe.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCardClick(recipe.id);
+                  }}
                 >
                   VIEW RECIPE
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </div>
   );
 };
