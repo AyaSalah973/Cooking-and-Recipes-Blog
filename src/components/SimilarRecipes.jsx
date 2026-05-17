@@ -6,7 +6,7 @@ import badge from "../assets/icons/badge.svg";
 
 function SimilarRecipes({ currentId }) {
   const [recipes, setRecipes] = useState([]);
-  const [index, setIndex] = useState(0); 
+  const [index, setIndex] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,13 +52,17 @@ function SimilarRecipes({ currentId }) {
         </div>
       </div>
 
-      {/* ✅ Grid structure identical to Featured Recipes */}
+      {/* Grid structure identical to Featured Recipes */}
       <div className="featured-grid-similar">
         {recipes.slice(index, index + 2).map((item) => (
           <div className="recipe-card-similar" key={item.id}>
             <div className="image-wrapper-similar">
-              <img src={item.image} alt={item.name} className="recipe-img-similar" />
-              {/* ✅ Badge conditionally rendered */}
+              <img 
+                src={item.image} 
+                alt={item.name} 
+                className="recipe-img-similar" 
+              />
+              {/* Badge conditionally rendered for vegan/vegetarian tags */}
               {item.tags?.some((tag) =>
                 [
                   "vegan",
@@ -68,7 +72,13 @@ function SimilarRecipes({ currentId }) {
                   "meatless",
                   "dairy-free",
                 ].includes(tag.toLowerCase())
-              ) && <img src={badge} alt="badge" className="recipe-badge-similar" />}
+              ) && (
+                <img 
+                  src={badge} 
+                  alt="badge" 
+                  className="recipe-badge-similar" 
+                />
+              )}
             </div>
             <div className="card-content-similar">
               <h3>{item.name}</h3>

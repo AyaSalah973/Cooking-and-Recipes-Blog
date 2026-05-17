@@ -36,6 +36,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.arrows button:hover {
+  background: rgba(38, 37, 34, 0.1);
 }
 
 /* ✅ Grid for 2 columns, identical to Featured Recipes */
@@ -53,13 +58,18 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.recipe-card-similar:hover {
+  transform: translateY(-4px);
 }
 
 /* ✅ Fixed image wrapper to prevent resizing */
 .image-wrapper-similar {
   position: relative;
   width: 100%;
-  height: 200px; /* Fixed height */
+  height: 200px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -80,6 +90,9 @@
   height: 40px;
   object-fit: contain;
   z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  padding: 4px;
 }
 
 /* ✅ Card content styling */
@@ -95,6 +108,11 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: #262522;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 50px;
 }
 
 .card-content-similar p {
@@ -103,6 +121,10 @@
   margin-bottom: 12px;
   line-height: 1.4;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Footer with button and time/serves */
@@ -147,7 +169,10 @@ body.dark .similar-section {
 
 body.dark .recipe-card-similar {
   background: #242424 !important;
-  border: 1px solid #3a3a3a !important;
+}
+
+body.dark .image-wrapper-similar {
+  background: #1a1a1a;
 }
 
 body.dark .card-content-similar {
@@ -214,5 +239,12 @@ body.dark .section-head h2 {
     width: 100%;
     text-align: center;
     padding: 8px;
+  }
+
+  .recipe-badge-similar {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
   }
 }
