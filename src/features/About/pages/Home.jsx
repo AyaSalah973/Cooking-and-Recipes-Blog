@@ -1,9 +1,11 @@
+// src/pages/Home.jsx (أو المسار الصحيح لملف Home)
+
 import styles from "./Home.module.css";
 import heroImg from "../../../assets/image_1.png";
 import image2 from "../../../assets/image_2.jpg";
 import image3 from "../../../assets/image_3.jpg";
 import image4 from "../../../assets/image_4.png";
-import { Milk, Soup, Hamburger, Cookie, Popcorn } from "lucide-react";
+import { Milk, Soup, Hamburger, Cookie, Popcorn, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
@@ -20,14 +22,43 @@ export default function Home() {
   const [recipes, setRecipes] = useState([]);
   const [index, setIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [favorites, setFavorites] = useState([]);
 
+  // تحميل الوصفات والمفضلة عند بدء التشغيل
   useEffect(() => {
-    fetch("https://dummyjson.com/recipes")
+    fetch("https://dummyjson.com/recipes?limit=100")
       .then(res => res.json())
-      .then(data => setRecipes(data.recipes));
+      .then(data => {
+        setRecipes(data.recipes);
+      });
+    
+    // تحميل المفضلة من localStorage
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setFavorites(savedFavorites);
   }, []);
 
+  // تحديث localStorage عند تغيير المفضلة
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
   const handleViewRecipe = (recipeId) => navigate(`/recipe/${recipeId}`);
+
+  // دالة تبديل المفضلة
+  const toggleFavorite = (recipeId, e) => {
+    e.stopPropagation(); // لمنع الانتقال إلى صفحة الوصفة عند الضغط على القلب
+    
+    setFavorites(prev => {
+      if (prev.includes(recipeId)) {
+        return prev.filter(id => id !== recipeId);
+      } else {
+        return [...prev, recipeId];
+      }
+    });
+  };
+
+  // التحقق إذا كانت الوصفة مفضلة
+  const isFavorite = (recipeId) => favorites.includes(recipeId);
 
   const next = () => { if (index + 2 < recipes.length) setIndex(index + 2); };
   const prev = () => { if (index - 2 >= 0) setIndex(index - 2); };
@@ -51,6 +82,38 @@ export default function Home() {
     const element = document.getElementById("recipes");
     if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // Component Recipe Card مع زر المفضلة
+  const RecipeCard = ({ recipe }) => (
+    <div className={styles['recipe-card']}>
+      <div className={styles['card-image-wrapper']}>
+        <img 
+          src={recipe.image} 
+          alt={recipe.name} 
+          onClick={() => handleViewRecipe(recipe.id)}
+        />
+        <button 
+          className={`${styles['favorite-btn']} ${isFavorite(recipe.id) ? styles['favorite-active'] : ''}`}
+          onClick={(e) => toggleFavorite(recipe.id, e)}
+          aria-label="Add to favorites"
+        >
+          <Heart 
+            size={18} 
+            fill={isFavorite(recipe.id) ? "#EE6352" : "none"} 
+            color={isFavorite(recipe.id) ? "#EE6352" : "#666"} 
+          />
+        </button>
+      </div>
+      <div className={styles['card-content']}>
+        <h3 onClick={() => handleViewRecipe(recipe.id)}>{recipe.name}</h3>
+        <p>{recipe.instructions?.[0]?.slice(0, 80)}...</p>
+        <div className={styles['card-footer']}>
+          <span>{recipe.prepTimeMinutes} MIN · {recipe.servings} SERVES</span>
+          <button className={styles['view-btn']} onClick={() => handleViewRecipe(recipe.id)}>VIEW RECIPE</button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.home}>
@@ -102,17 +165,7 @@ export default function Home() {
         </div>
         <div className={styles['featured-grid']}>
           {recipes.slice(index, index + 2).map((recipe) => (
-            <div key={recipe.id} className={styles['recipe-card']}>
-              <img src={recipe.image} alt={recipe.name} />
-              <div className={styles['card-content']}>
-                <h3>{recipe.name}</h3>
-                <p>{recipe.instructions?.slice(0, 80)}...</p>
-                <div className={styles['card-footer']}>
-                  <span>{recipe.prepTimeMinutes} MIN · {recipe.servings} SERVES</span>
-                  <button className={styles['view-btn']} onClick={() => handleViewRecipe(recipe.id)}>VIEW RECIPE</button>
-                </div>
-              </div>
-            </div>
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       </div>
@@ -135,17 +188,7 @@ export default function Home() {
         </div>
         <div className={styles['recipes-grid']}>
           {filteredRecipes.slice(0, 6).map((recipe) => (
-            <div key={recipe.id} className={styles['recipe-card']}>
-              <img src={recipe.image} alt={recipe.name} />
-              <div className={styles['card-content']}>
-                <h3>{recipe.name}</h3>
-                <p>{recipe.instructions?.slice(0, 80)}...</p>
-                <div className={styles['card-footer']}>
-                  <span>{recipe.prepTimeMinutes} MIN · {recipe.servings} SERVES</span>
-                  <button className={styles['view-btn']} onClick={() => handleViewRecipe(recipe.id)}>VIEW RECIPE</button>
-                </div>
-              </div>
-            </div>
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       </div>

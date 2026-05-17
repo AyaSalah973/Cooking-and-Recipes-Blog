@@ -963,3 +963,169 @@ p {
   background: #333 !important;
   color: #fff !important;
 }
+
+/* ========================= */
+/* FAVORITE BUTTON STYLES    */
+/* ========================= */
+
+/* تأكد من أن جميع حاويات الصور لها position relative */
+.newest-img-wrap,
+.basic-card,
+.nourish-card,
+.tip-card {
+  position: relative;
+}
+
+/* إضافة position relative للكلاسات التي تحتوي على صور */
+.basic-card,
+.tip-card {
+  position: relative;
+}
+
+.nourish-card {
+  position: relative;
+}
+
+/* تنسيق زر القلب الموحد */
+.favorite-btn-products {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+}
+
+.favorite-btn-products:hover {
+  transform: scale(1.1);
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* تنسيق الصور للحفاظ على الشكل الأصلي */
+.newest-img-wrap img,
+.basic-card img,
+.tip-card img,
+.nourish-card img {
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* الحفاظ على ارتفاع الصور كما كان */
+.newest-img-wrap img {
+  height: 364px;
+}
+
+.basic-card img,
+.tip-card img {
+  height: 334px;
+}
+
+.nourish-card img {
+  height: 440px;
+  filter: brightness(0.5);
+}
+
+/* تعديل موقع الفيجان بادج ليكون في اليسار */
+.vegan-badge {
+  position: absolute;
+  bottom: -20px;
+  right: 12px;
+  z-index: 10; /* تأكد أن البادج تحت القلب */
+  background: #9FDC26;
+  color: #262522;
+  font-size: 0.6rem;
+  font-weight: 1000;
+  text-align: center;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  text-transform: uppercase;
+  writing-mode: horizontal-tb;
+  transform: rotate(330deg);
+}
+
+/* دعم الوضع المظلم */
+:global(body.dark) .favorite-btn-products {
+  background: rgba(38, 38, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:global(body.dark) .favorite-btn-products:hover {
+  background: #2a2a2a;
+}
+
+/* تعديلات responsive للحفاظ على الجريد */
+@media (max-width: 1024px) {
+  .newest-img-wrap img {
+    height: 300px;
+  }
+  
+  .basic-card img,
+  .tip-card img {
+    height: 280px;
+  }
+  
+  .nourish-card img {
+    height: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .newest-img-wrap img {
+    height: 260px;
+  }
+  
+  .basic-card img,
+  .tip-card img {
+    height: 240px;
+  }
+  
+  .nourish-card img {
+    height: 340px;
+  }
+  
+  .favorite-btn-products {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+  }
+  
+  .favorite-btn-products svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .newest-img-wrap img {
+    height: 220px;
+  }
+  
+  .basic-card img,
+  .tip-card img {
+    height: 200px;
+  }
+  
+  .nourish-card img {
+    height: 280px;
+  }
+}

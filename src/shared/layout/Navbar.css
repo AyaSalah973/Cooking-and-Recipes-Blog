@@ -697,6 +697,39 @@ body {
     max-width: none;
     border-radius: 0;
   }
+
+  .drawer-profile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+  .drawer-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(240, 235, 225, 0.2);
+    border-radius: 16px;
+    color: #F0EBE1;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .drawer-profile-link:hover {
+    background: rgba(242, 156, 51, 0.2);
+    border-color: #F29C33;
+  }
+
+  .drawer-profile-link svg {
+    color: #F0EBE1;
+  }
 }
 
 /* ========================= */
