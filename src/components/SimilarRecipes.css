@@ -1,6 +1,7 @@
 /* src/components/SimilarRecipes.css */
 
 .similar-section {
+  min-height: 760px;
   margin-top: 60px;
   padding: 24px;
   border-radius: 32px;
@@ -130,7 +131,9 @@
 /* Footer with button and time/serves */
 .card-footer-similar {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
   margin-top: 12px;
   gap: 12px;
